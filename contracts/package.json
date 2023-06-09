@@ -14,5 +14,8 @@
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "chai": "^4.3.7",
     "hardhat": "^2.15.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.1"
   }
 }
