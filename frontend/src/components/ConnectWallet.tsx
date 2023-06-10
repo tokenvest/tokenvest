@@ -47,7 +47,7 @@ export default function ConnectWallet() {
     );
 
     // redirect to /user
-    navigate("/user");
+    navigate("/marketplace");
   };
 
   return (
