@@ -16,7 +16,7 @@ function wallet(index: number): ethers.HDNodeWallet {
   );
 }
 
-describe("Builder", () => {
+describe("Building", () => {
   let building: Building;
   before(async () => {
     let deployer: ethers.Signer;
@@ -30,21 +30,13 @@ describe("Builder", () => {
 
     const Building = await hre.ethers.getContractFactory("Building");
     const deployerAddress = (await hre.ethers.getSigners())[0].address;
-    building = await Building.deploy("URI", deployerAddress, euroAddress);
-    const tx = await building.mint(
-      deployerAddress,
-      0,
-      1_000,
-      new Uint8Array(),
-      1_000,
-      0,
-      0
-    );
+    building = await Building.deploy("URI", deployerAddress, [deployerAddress], euroAddress);
+    const tx = await building.mint(deployerAddress, 0, 1_000, 0, 0);
     await tx.wait();
   });
 
   it("no nfts", async () => {
     const supply = await building.getTotalSupply(0);
-    expect(supply).to.be.equal(1000);
+    expect(supply).to.be.equal(1_000);
   });
 });
