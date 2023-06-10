@@ -10,8 +10,6 @@ error PayoutSettlementContract__UserDoesNotHaveABalance();
 error PayoutSettlementContract__PayoutsNotClaimableYet();
 
 contract PayoutSettlementContract {
-    IERC20 stableCoinAddress;
-
     //mapping nft id to boolean flag. payout should be organised per property
     mapping(uint256 => bool) payoutAllowedToBeClaimed;
 
@@ -23,8 +21,7 @@ contract PayoutSettlementContract {
         address funderAddress
     );
 
-    constructor(address _stableCoinAddress, address _buildingNFTaddress) {
-        stableCoinAddress = IERC20(_stableCoinAddress);
+    constructor(address _buildingNFTaddress) {
         building = Building(_buildingNFTaddress);
     }
 
@@ -32,7 +29,7 @@ contract PayoutSettlementContract {
         if (building.getTotalSupply(id) == 0)
             revert PayoutSettlementContract__NFTdoesNotExist();
         uint requiredFundsToDistribute = building.getPayoutPerTokenAtSale(id);
-        bool success = stableCoinAddress.transferFrom(
+        bool success = building.stableCoinAddress().transferFrom(
             msg.sender,
             address(this),
             requiredFundsToDistribute
@@ -60,6 +57,6 @@ contract PayoutSettlementContract {
 
         uint256 amount = (balance * building.getPayoutPerTokenAtSale(id)) /
             10e18;
-        stableCoinAddress.transfer(msg.sender, amount);
+        building.stableCoinAddress().transfer(msg.sender, amount);
     }
 }

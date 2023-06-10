@@ -29,8 +29,10 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
   //BUILDING
   const uri = "telnet://192.0.2.16:80/"; //TODO: fetch from helper hardhat config
+  const stableCoinContractAddress = stablecoinContract.address;
+  const signerAddress = (await hre.ethers.getSigners())[0].address;
 
-  args = [uri];
+  args = [uri, signerAddress, stableCoinContractAddress];
 
   const buildingContract = await deploy("building", {
     contract: "Building",
@@ -50,9 +52,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
   //SETTLEMENTCONTRACT
   const buildingContractAddress = buildingContract.address;
-  const stableCoinContractAddress = stablecoinContract.address;
 
-  args = [stableCoinContractAddress, buildingContractAddress];
+  args = [buildingContractAddress];
 
   const settlementContract = await deploy("settlementcontract", {
     contract: "PayoutSettlementContract",

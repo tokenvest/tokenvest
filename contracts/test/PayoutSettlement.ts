@@ -1,7 +1,7 @@
 import hre from "hardhat";
 import { Building } from "../typechain-types";
+import { PayoutSettlementContract } from "../typechain-types";
 import { ethers } from "ethers";
-import { getAllListings } from "../sdk/Listings";
 import { expect } from "chai";
 
 import { HardhatNetworkHDAccountsConfig } from "hardhat/types";
@@ -16,13 +16,17 @@ function wallet(index: number): ethers.HDNodeWallet {
   );
 }
 
-describe("Builder", () => {
-  let building: Building;
+describe("PayoutSettlementContract", () => {
+  let settlement: PayoutSettlementContract;
   before(async () => {
     let deployer: ethers.Signer;
     let deployerWallet: ethers.HDNodeWallet;
     let signer: ethers.Signer;
     let signerWallet: ethers.HDNodeWallet;
+
+    const PayoutSettlementContractFactory = await hre.ethers.getContractFactory(
+      "Building"
+    );
 
     const EURssFactory = await hre.ethers.getContractFactory("EURss");
     const eurStableCoin = await EURssFactory.deploy("EURss", "EUR");
@@ -30,21 +34,14 @@ describe("Builder", () => {
 
     const Building = await hre.ethers.getContractFactory("Building");
     const deployerAddress = (await hre.ethers.getSigners())[0].address;
-    building = await Building.deploy("URI", deployerAddress, euroAddress);
-    const tx = await building.mint(
-      deployerAddress,
-      0,
-      1_000,
-      new Uint8Array(),
-      1_000,
-      0,
-      0
-    );
-    await tx.wait();
-  });
+    const building = await Building.deploy("URI", deployerAddress, euroAddress);
+    const buildingAddress = building.getAddress();
 
-  it("no nfts", async () => {
-    const supply = await building.getTotalSupply(0);
-    expect(supply).to.be.equal(1000);
+    const payoutsettlementContractFactory = await hre.ethers.getContractFactory(
+      "PayoutSettlementContract"
+    );
+    const settlementContract = await payoutsettlementContractFactory.deploy(
+      buildingAddress
+    );
   });
 });

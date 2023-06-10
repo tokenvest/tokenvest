@@ -3,9 +3,13 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "./KYC.sol";
 
 contract Building is ERC1155, KYC {
+    IERC20 public stableCoinAddress;
+
     mapping(uint256 => uint256) totalSupply;
     mapping(uint256 => uint256) initialPricePerToken;
     mapping(uint256 => uint256) payoutPerTokenAtSale;
@@ -19,8 +23,11 @@ contract Building is ERC1155, KYC {
 
     constructor(
         string memory _uri,
-        address _signerAddress
-    ) ERC1155(_uri) KYC(_signerAddress) {}
+        address _signerAddress,
+        address _stableCoinAddress
+    ) ERC1155(_uri) KYC(_signerAddress) {
+        stableCoinAddress = IERC20(_stableCoinAddress);
+    }
 
     function getTotalSupply(uint256 id) public view returns (uint256) {
         return totalSupply[id];

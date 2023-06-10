@@ -29,7 +29,10 @@ contract ListingContract {
         uint256 units,
         uint256 unitPrice
     ) public {
-        require(token.isApprovedForAll(msg.sender, address(this)), "not approved");
+        require(
+            token.isApprovedForAll(msg.sender, address(this)),
+            "not approved"
+        );
 
         uint index = listings.length;
         Listing memory listing = Listing({
