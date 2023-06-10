@@ -6,6 +6,8 @@ import "./Building.sol";
 
 error PayoutSettlementContract__NFTdoesNotExist();
 error PayoutSettlementContract__InsufficientTokensAvailableForTransfer();
+error PayoutSettlementContract__UserDoesNotHaveABalance();
+error PayoutSettlementContract__PayoutsNotClaimableYet();
 
 contract PayoutSettlementContract {
     IERC20 stableCoinAddress;
@@ -29,8 +31,7 @@ contract PayoutSettlementContract {
     function setNFTasSold(uint256 id) external {
         if (building.getTotalSupply(id) == 0)
             revert PayoutSettlementContract__NFTdoesNotExist();
-        uint requiredFundsToDistribute = (building.getInitialPrice(id) *
-            building.getYieldAtSale(id)) / 10 ** 18;
+        uint requiredFundsToDistribute = building.getPayoutPerTokenAtSale(id);
         bool success = stableCoinAddress.transferFrom(
             msg.sender,
             address(this),
@@ -40,5 +41,25 @@ contract PayoutSettlementContract {
             revert PayoutSettlementContract__InsufficientTokensAvailableForTransfer();
         payoutAllowedToBeClaimed[id] = true;
         emit AppartmentSold(id, requiredFundsToDistribute, msg.sender);
+    }
+
+    function withdrawFunds(uint256 id) public {
+        uint256 balance = building.balanceOf(msg.sender, id);
+        if (!payoutAllowedToBeClaimed[id])
+            revert PayoutSettlementContract__PayoutsNotClaimableYet();
+        if (balance == 0)
+            revert PayoutSettlementContract__UserDoesNotHaveABalance();
+        bytes memory emptyData;
+        building.safeTransferFrom(
+            msg.sender,
+            address(this),
+            id,
+            balance,
+            emptyData
+        );
+
+        uint256 amount = (balance * building.getPayoutPerTokenAtSale(id)) /
+            10e18;
+        stableCoinAddress.transfer(msg.sender, amount);
     }
 }

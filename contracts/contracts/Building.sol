@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 contract Building is ERC1155 {
     mapping(uint256 => uint256) totalSupply;
     mapping(uint256 => uint256) initialPricePerToken;
-    mapping(uint256 => uint256) yieldAtSale;
+    mapping(uint256 => uint256) payoutPerTokenAtSale;
 
     event AppartmentMinted(
         uint256 id,
@@ -22,12 +22,12 @@ contract Building is ERC1155 {
         return totalSupply[id];
     }
 
-    function getInitialPrice(uint256 id) public returns (uint256) {
+    function getInitialPricePerToken(uint256 id) public returns (uint256) {
         return initialPricePerToken[id];
     }
 
-    function getYieldAtSale(uint256 id) public returns (uint256) {
-        return yieldAtSale[id];
+    function getPayoutPerTokenAtSale(uint256 id) public returns (uint256) {
+        return payoutPerTokenAtSale[id];
     }
 
     function mint(
@@ -42,7 +42,11 @@ contract Building is ERC1155 {
         _mint(to, id, amount, data);
         totalSupply[id] = _initialSupply;
         initialPricePerToken[id] = _initialPricePerToken;
-        yieldAtSale[id] = _yieldAtSale;
+
+        payoutPerTokenAtSale[id] =
+            (_initialPricePerToken * _yieldAtSale) /
+            1e18;
+
         emit AppartmentMinted(
             id,
             _initialPricePerToken,
