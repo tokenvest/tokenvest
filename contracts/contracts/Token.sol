@@ -50,14 +50,14 @@ abstract contract Token is ERC1155, KYC {
         uint256 id,
         uint256 _initialSupply,
         uint256 _initialPricePerToken,
-        uint _yieldAtSale
+        uint256 _yieldAtSale
     ) internal {
         _mint(to, id, _initialSupply, "");
         totalSupply[id] = _initialSupply;
         initialPricePerToken[id] = _initialPricePerToken;
 
         payoutPerTokenAtSale[id] =
-            (_initialPricePerToken * _yieldAtSale) /
+            (_initialPricePerToken * (1e18 + _yieldAtSale)) /
             1e18;
 
         emit AppartmentMinted(

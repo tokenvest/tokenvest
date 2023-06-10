@@ -54,7 +54,8 @@ contract Listings {
         emit ListingChanged(msg.sender, index);
     }
 
-    function buy(uint256 index, uint256 units) public payable {
+    function buy(uint256 index, uint256 units) public {
+        require(0 < units && index < listings.length, "invalid request");
         Listing storage listing = listings[index];
 
         require(listing.unitsAvailable >= units);
@@ -68,7 +69,6 @@ contract Listings {
         );
 
         uint256 totalCost = (units * listing.unitPrice);
-        require(msg.value == totalCost);
 
         require(listing.token.stableCoinAddress().transferFrom(msg.sender, listing.seller, totalCost), "transfer failed.");
 

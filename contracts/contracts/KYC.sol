@@ -32,6 +32,10 @@ contract KYC is Ownable {
         signerAddress = _signerAddress;
     }
 
+    function setKYCByOwner(address addr) external onlyOwner {
+        isKYCed[addr] = true;
+    }
+
     function setKYC(Signature calldata signature) external {
         bytes32 h = keccak256(abi.encode(msg.sender));
         address signer = ecrecover(h, signature.v, signature.r, signature.s);

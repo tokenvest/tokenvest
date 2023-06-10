@@ -1,13 +1,14 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { createConfig, configureChains, mainnet, WagmiConfig } from "wagmi";
-import { publicProvider } from "wagmi/providers/public";
-import Landing from "./pages/Landing";
-import Marketplace from "./pages/Marketplace";
-import Register from "./pages/Register";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createConfig, configureChains, mainnet, WagmiConfig } from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
+import Landing from './pages/Landing';
+import Marketplace from './pages/Marketplace';
+import Register from './pages/Register';
+import { AuthProvider } from './providers/auth.provider';
 
 const { publicClient, webSocketPublicClient } = configureChains(
   [mainnet],
-  [publicProvider()]
+  [publicProvider()],
 );
 
 const config = createConfig({
@@ -17,26 +18,26 @@ const config = createConfig({
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Landing />,
   },
   {
-    path: "/register",
+    path: '/register',
     element: <Register />,
   },
   {
-    path: "/Marketplace",
+    path: '/Marketplace',
     element: <Marketplace />,
   },
 ]);
 
 function App() {
   return (
-    <>
-      <WagmiConfig config={config}>
+    <WagmiConfig config={config}>
+      <AuthProvider>
         <RouterProvider router={router} />
-      </WagmiConfig>
-    </>
+      </AuthProvider>
+    </WagmiConfig>
   );
 }
 
