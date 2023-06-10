@@ -66,7 +66,8 @@ contract ListingContract {
 
         uint256 totalCost = (units * listing.priceNumerator) / listing.priceDenominator;
         require(msg.value == totalCost);
-        payable(listing.seller).transfer(totalCost);
+        (bool success, ) = listing.seller.call{value: totalCost}("");
+        require(success, "transfer failed.");
 
         emit ListingChanged(listing.seller, index);
     }
