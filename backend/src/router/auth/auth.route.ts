@@ -13,7 +13,8 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
     url: '/api/auth/request-message',
     schema: authMessageSchema,
     handler: async (req: AuthMessageRequest, res) => {
-      const { address, chain, network } = req.body;
+      const { address, chain } = req.body;
+
       try {
         const config = {
           domain: import.meta.env.VITE_MORALIS_HOST,
@@ -30,7 +31,7 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
 
         res.send(message);
       } catch (e) {
-        res.status(400).send({ error: e.message });
+        res.status(400).send();
         console.error(e);
       }
     },
@@ -64,8 +65,8 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
 
         res.status(200).send(user);
       } catch (e) {
-        res.status(400).send({ error: e.message });
-        console.error(e);
+        res.status(400).send();
+        console.log(e);
       }
     },
   });
@@ -85,7 +86,7 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
 
         res.send(data);
       } catch {
-        return res.status(403).send({ message: 'Error authenticating' });
+        return res.status(403).send();
       }
     },
   });
@@ -96,9 +97,9 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
     handler: async (req, res) => {
       try {
         res.clearCookie('jwt');
-        return res.status(200).send({ message: 'Logged out' });
+        return res.status(200).send();
       } catch {
-        return res.status(403).send({ message: 'Error logging out' });
+        return res.status(403).send();
       }
     },
   });
