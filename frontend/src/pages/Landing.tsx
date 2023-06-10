@@ -1,6 +1,23 @@
-import Navbar from "../components/Navbar";
+import { useEffect } from 'react';
+import Navbar from '../components/Navbar';
+import axios from 'axios';
+import { useAuth } from '../providers/auth.provider';
 
 const Landing = () => {
+  const { signIn, signOut } = useAuth();
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_APP_SERVER_URL}/api/auth/authenticate`, {
+        // TODO: hacky bug fix
+        withCredentials: !!document.cookie,
+      })
+      .then(({ data }) => {
+        signIn(data);
+      })
+      .catch(() => signOut());
+  }, []);
+
   return (
     <div className="landingpage h-full bg-black pb-5">
       <Navbar />
@@ -80,11 +97,10 @@ const Landing = () => {
           <div className="card-body bg-gray-900 text-white">
             <h2 className="card-title">South Sky Villa</h2>
             <p>
-              South Sky Villa is a luxurious property offering panoramic views
-              and modern interiors. This desirable residence features spacious
-              living areas, a high-end kitchen, and private, comfortable
-              bedrooms. Enjoy the perfect blend of elegance, comfort, and
-              natural beauty at South Sky Villa.
+              South Sky Villa is a luxurious property offering panoramic views and modern
+              interiors. This desirable residence features spacious living areas, a
+              high-end kitchen, and private, comfortable bedrooms. Enjoy the perfect blend
+              of elegance, comfort, and natural beauty at South Sky Villa.
             </p>
             <div className="card-actions justify-end">
               <button className="btn btn-primary">Buy Now</button>
