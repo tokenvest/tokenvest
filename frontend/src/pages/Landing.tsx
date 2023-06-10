@@ -73,11 +73,11 @@ const Landing = () => {
         <p className=" text-white w-full display flex justify-center items-center font-bold text-3xl">
           Top Properties
         </p>
-        <div className="card card-compact w-96 bg-base-100 shadow-xl m-5">
+        <div className="card card-compact w-96 bg-gray-800 text-white shadow-xl mt-20">
           <figure>
             <img src="/marketplace4.png" alt="Villa" />
           </figure>
-          <div className="card-body bg-gray-900 text-white">
+          <div className="card-body">
             <h2 className="card-title">South Sky Villa</h2>
             <p>
               South Sky Villa is a luxurious property offering panoramic views
