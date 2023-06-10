@@ -60,7 +60,7 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
         const token = app.jwt.sign(user);
 
         res.setCookie('jwt', token, {
-          httpOnly: true,
+          path: '/',
         });
 
         res.status(200).send(user);
