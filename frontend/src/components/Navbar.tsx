@@ -1,5 +1,5 @@
-import React from "react";
-import ConnectWallet from "./ConnectWallet";
+import React from 'react';
+import ConnectWallet from './ConnectWallet';
 
 const Navbar = () => {
   return (

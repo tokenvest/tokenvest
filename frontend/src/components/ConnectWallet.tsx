@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import { useAccount, useConnect, useSignMessage, useDisconnect } from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import axios from "axios";
+import { useAccount, useConnect, useSignMessage, useDisconnect } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import axios from 'axios';
 
 export default function ConnectWallet() {
   const navigate = useNavigate();
@@ -22,32 +22,32 @@ export default function ConnectWallet() {
       connector: new InjectedConnector(),
     });
 
-    const userData = { address: account, chain: chain.id, network: "evm" };
+    const userData = { address: account, chain: chain.id, network: 'evm' };
     // making a post request to our 'request-message' endpoint
     const { data } = await axios.post(
-      `${process.env.REACT_APP_SERVER_URL}/request-message`,
+      `${import.meta.env.VITE_APP_SERVER_URL}/api/auth/request-message`,
       userData,
       {
         headers: {
-          "content-type": "application/json",
+          'content-type': 'application/json',
         },
-      }
+      },
     );
     const message = data.message;
     // signing the received message via metamask
     const signature = await signMessageAsync({ message });
 
     await axios.post(
-      `${process.env.REACT_APP_SERVER_URL}/verify`,
+      `${import.meta.env.VITE_APP_SERVER_URL}/api/auth/verify`,
       {
         message,
         signature,
       },
-      { withCredentials: true } // set cookie from Express server
+      { withCredentials: true }, // set cookie from Express server
     );
 
     // redirect to /user
-    navigate("/user");
+    navigate('/user');
   };
 
   return (
