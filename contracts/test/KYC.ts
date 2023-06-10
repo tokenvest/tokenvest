@@ -3,19 +3,12 @@ import hre from "hardhat";
 import { ethers } from "ethers";
 import { KYC } from "../typechain-types";
 import { HardhatNetworkHDAccountsConfig } from "hardhat/types";
+import { sign } from "../sdk/Sign";
 
 const accounts = hre.config.networks.hardhat.accounts as HardhatNetworkHDAccountsConfig;
 
 function wallet(index: number): ethers.HDNodeWallet {
     return ethers.HDNodeWallet.fromMnemonic(ethers.Mnemonic.fromPhrase(accounts.mnemonic), `${accounts.path}/${index}`)
-}
-
-function sign(address: string, signer: ethers.HDNodeWallet): ethers.Signature {
-    const coder = new ethers.AbiCoder();
-    const message = coder.encode(["address"], [address]);
-    const msgHash = ethers.keccak256(message);
-    const signature = new ethers.SigningKey(signer.privateKey).sign(msgHash);
-    return signature;
 }
 
 describe("KYC", () => {
@@ -36,13 +29,12 @@ describe("KYC", () => {
 
         let KYC: KYC;
         before(async () => {
-            let _: ethers.Signer;
             [deployer, signer, ...users] = await hre.ethers.getSigners();
             deployerWallet = wallet(0);
             signerWallet = wallet(1);
 
-            const { kyc } = await deploy(signer);
-            KYC = kyc;
+            const kycFactory = await hre.ethers.getContractFactory("KYC");
+            KYC = await kycFactory.deploy(await signer.getAddress());
         });
 
         it("Check Owner", async () => {

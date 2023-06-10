@@ -26,7 +26,6 @@ describe("Builder", () => {
 
     const Building = await hre.ethers.getContractFactory("Building");
     const deployerAddress = (await hre.ethers.getSigners())[0].address;
-
     building = await Building.deploy("URI", deployerAddress);
     const tx = await building.mint(
       deployerAddress,

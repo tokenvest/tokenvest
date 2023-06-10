@@ -12,9 +12,9 @@ const initServer = async (opts?: FastifyServerOptions) => {
 
   await establishDatabaseConnection();
 
-
   app.register(cors, {
-    origin: '*',
+    origin: import.meta.env.VITE_MORALIS_REACT_URL,
+    credentials: true,
   });
 
 
