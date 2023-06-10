@@ -1,5 +1,5 @@
-import React from 'react';
-import ConnectWallet from './ConnectWallet';
+import React from "react";
+import ConnectWallet from "./ConnectWallet";
 
 const Navbar = () => {
   return (
@@ -31,7 +31,7 @@ const Navbar = () => {
             </li>
             <li>
               <a>Parent</a>
-              <ul className="p-2">
+              <ul className="p-2  bg-transparent">
                 <li>
                   <a>Submenu 1</a>
                 </li>
@@ -48,19 +48,19 @@ const Navbar = () => {
         <a className="btn btn-ghost normal-case font-bold text-xl">Really</a>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal px-1 ">
           <li>
             <a>Item 1</a>
           </li>
-          <li tabIndex={0}>
-            <details>
-              <summary>Parent</summary>
-              <ul className="p-2">
+          <li tabIndex={0} className="bg-transparent">
+            <details className="bg-transparent">
+              <summary className="">Parent</summary>
+              <ul className="p-2 ">
                 <li>
-                  <a>Submenu 1</a>
+                  <a className="text-black">Submenu 1</a>
                 </li>
                 <li>
-                  <a>Submenu 2</a>
+                  <a className="text-black">Submenu 2</a>
                 </li>
               </ul>
             </details>
