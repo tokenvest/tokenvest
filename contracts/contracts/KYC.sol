@@ -20,6 +20,11 @@ contract KYC is Ownable {
         address indexed newSigner
     );
 
+    modifier onlyKYCed(address addr) {
+        require(isKYCed[addr], "not KYCed");
+        _;
+    }
+
     modifier onlySigner() {
         require(msg.sender == signerAddress);
         _;
@@ -36,7 +41,7 @@ contract KYC is Ownable {
         isKYCed[msg.sender] = true;
     }
 
-    function isKYC(address addr) external view returns (bool) {
+    function getKYC(address addr) external view returns (bool) {
         return isKYCed[addr];
     }
 
