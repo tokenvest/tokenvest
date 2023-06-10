@@ -7,6 +7,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="*" element={<h1>404 Page not found</h1>} />
         </Routes>
       </BrowserRouter>
     </>
