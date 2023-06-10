@@ -12,9 +12,6 @@ const initServer = async (opts?: FastifyServerOptions) => {
 
   await establishDatabaseConnection();
 
-  await Moralis.start({
-    apiKey: import.meta.env.VITE_MORALIS_API_KEY,
-  });
 
   app.register(cors, {
     origin: '*',
@@ -31,6 +28,11 @@ const initServer = async (opts?: FastifyServerOptions) => {
   });
 
   app.register(authRoute);
+
+  await Moralis.start({
+    apiKey: import.meta.env.VITE_MORALIS_API_KEY,
+  });
+
   if (import.meta.env.PROD) {
     try {
       const PORT = 6543;
