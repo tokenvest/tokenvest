@@ -24,18 +24,18 @@ describe("Building", () => {
     let signerWallet: ethers.HDNodeWallet;
 
     const EURssFactory = await hre.ethers.getContractFactory("EURss");
-    const eurStableCoin = await EURssFactory.deploy("EURss", "EUR");
+    const eurStableCoin = await EURssFactory.deploy();
     const euroAddress = eurStableCoin.getAddress();
 
     const Building = await hre.ethers.getContractFactory("MultiSigToken");
     const deployerAddress = (await hre.ethers.getSigners())[0].address;
     building = await Building.deploy("URI", deployerAddress, [deployerAddress], euroAddress, 1);
     {
-      const rIndex = await building.submitCreateTokenRequest.staticCall(deployerAddress, 1_000, 0, 0);
-      const tx = await building.submitCreateTokenRequest(deployerAddress, 1_000, 0, 0);
+      const rIndex = await building.submitMintRequest.staticCall(deployerAddress, 1_000, 0, 0);
+      const tx = await building.submitMintRequest(deployerAddress, 1_000, 0, 0);
       await tx.wait();
-      await (await building.confirmCreateTokenRequest(rIndex)).wait();
-      await (await building.executeCreateTokenRequest(rIndex)).wait();
+      await (await building.signMintRequest(rIndex)).wait();
+      await (await building.mint(rIndex)).wait();
     }
   });
 

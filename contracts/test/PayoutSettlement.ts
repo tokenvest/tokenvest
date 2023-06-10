@@ -1,9 +1,6 @@
 import hre from "hardhat";
-import { Building } from "../typechain-types";
 import { PayoutSettlementContract } from "../typechain-types";
 import { ethers } from "ethers";
-import { expect } from "chai";
-
 import { HardhatNetworkHDAccountsConfig } from "hardhat/types";
 
 const accounts = hre.config.networks.hardhat
