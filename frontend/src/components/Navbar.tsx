@@ -1,6 +1,8 @@
 import ConnectWallet from "./ConnectWallet";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ lightText = true }) => {
+  const navigate = useNavigate();
   const textColorClass = lightText ? "text-white" : "text-black";
   return (
     <div
@@ -47,7 +49,12 @@ const Navbar = ({ lightText = true }) => {
             </li>
           </ul>
         </div>
-        <a className="btn btn-ghost normal-case font-bold text-xl">Really</a>
+        <a
+          className="btn btn-ghost normal-case font-bold text-xl"
+          onClick={() => navigate("/")}
+        >
+          TokenVest
+        </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 ">
