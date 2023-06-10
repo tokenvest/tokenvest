@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.19;
 
-import "./Building.sol";
+import "./Token.sol";
 
-contract MSBuilding is Building {
+contract MultiSigToken is Token {
     uint private id;
     uint public nConfirmations;
 
@@ -47,7 +47,7 @@ contract MSBuilding is Building {
         address[] memory _owners,
         address _stableCoinAddress,
         uint _numConfirmationsRequired
-    ) Building(_uri, _signerAddress, _owners, _stableCoinAddress) {
+    ) Token(_uri, _signerAddress, _owners, _stableCoinAddress) {
         require(
             _numConfirmationsRequired > 0 &&
                 _numConfirmationsRequired <= _owners.length,

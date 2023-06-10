@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./Building.sol";
+import "./Token.sol";
 
 error PayoutSettlementContract__NFTdoesNotExist();
 error PayoutSettlementContract__InsufficientTokensAvailableForTransfer();
@@ -13,7 +13,7 @@ contract PayoutSettlementContract {
     //mapping nft id to boolean flag. payout should be organised per property
     mapping(uint256 => bool) payoutAllowedToBeClaimed;
 
-    Building building;
+    Token token;
 
     event AppartmentSold(
         uint256 id,
@@ -22,14 +22,14 @@ contract PayoutSettlementContract {
     );
 
     constructor(address _buildingNFTaddress) {
-        building = Building(_buildingNFTaddress);
+        token = Token(_buildingNFTaddress);
     }
 
     function setNFTasSold(uint256 id) external {
-        if (building.getTotalSupply(id) == 0)
+        if (token.getTotalSupply(id) == 0)
             revert PayoutSettlementContract__NFTdoesNotExist();
-        uint requiredFundsToDistribute = building.getPayoutPerTokenAtSale(id);
-        bool success = building.stableCoinAddress().transferFrom(
+        uint requiredFundsToDistribute = token.getPayoutPerTokenAtSale(id);
+        bool success = token.stableCoinAddress().transferFrom(
             msg.sender,
             address(this),
             requiredFundsToDistribute
@@ -41,13 +41,13 @@ contract PayoutSettlementContract {
     }
 
     function withdrawFunds(uint256 id) public {
-        uint256 balance = building.balanceOf(msg.sender, id);
+        uint256 balance = token.balanceOf(msg.sender, id);
         if (!payoutAllowedToBeClaimed[id])
             revert PayoutSettlementContract__PayoutsNotClaimableYet();
         if (balance == 0)
             revert PayoutSettlementContract__UserDoesNotHaveABalance();
         bytes memory emptyData;
-        building.safeTransferFrom(
+        token.safeTransferFrom(
             msg.sender,
             address(this),
             id,
@@ -55,8 +55,8 @@ contract PayoutSettlementContract {
             emptyData
         );
 
-        uint256 amount = (balance * building.getPayoutPerTokenAtSale(id)) /
+        uint256 amount = (balance * token.getPayoutPerTokenAtSale(id)) /
             10e18;
-        building.stableCoinAddress().transfer(msg.sender, amount);
+        token.stableCoinAddress().transfer(msg.sender, amount);
     }
 }
