@@ -51,7 +51,7 @@ abstract contract Building is ERC1155, KYC {
         uint256 _initialSupply,
         uint256 _initialPricePerToken,
         uint _yieldAtSale
-    ) public virtual {
+    ) public virtual onlyOwner {
         _mint(to, id, _initialSupply, "");
         totalSupply[id] = _initialSupply;
         initialPricePerToken[id] = _initialPricePerToken;
