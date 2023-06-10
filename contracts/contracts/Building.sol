@@ -45,13 +45,13 @@ abstract contract Building is ERC1155, KYC {
         return payoutPerTokenAtSale[id];
     }
 
-    function mint(
+    function _mintToken(
         address to,
         uint256 id,
         uint256 _initialSupply,
         uint256 _initialPricePerToken,
         uint _yieldAtSale
-    ) public virtual onlyOwner {
+    ) internal {
         _mint(to, id, _initialSupply, "");
         totalSupply[id] = _initialSupply;
         initialPricePerToken[id] = _initialPricePerToken;

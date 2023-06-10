@@ -30,8 +30,12 @@ describe("Building", () => {
     const Building = await hre.ethers.getContractFactory("MSBuilding");
     const deployerAddress = (await hre.ethers.getSigners())[0].address;
     building = await Building.deploy("URI", deployerAddress, [deployerAddress], euroAddress, 1);
-    const tx = await building.mint(deployerAddress, 0, 1_000, 0, 0);
-    await tx.wait();
+    {
+      const tx = await building.submitCreateTokenRequest(deployerAddress, 1_000, 0, 0);
+      await tx.wait();
+      await (await building.confirmCreateTokenRequest(0)).wait();
+      await (await building.executeCreateTokenRequest(0)).wait();
+    }
   });
 
   it("no nfts", async () => {

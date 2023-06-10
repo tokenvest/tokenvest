@@ -5,10 +5,14 @@ pragma solidity ^0.8.19;
 import "./Building.sol";
 
 contract MSBuilding is Building {
+    uint private id;
     uint public nConfirmations;
 
     struct CreateTokenRequest {
-        // TODO: add fields needed to create a token.
+        address to;
+        uint256 initialSupply;
+        uint256 initialPricePerToken;
+        uint yieldAtSale;
 
         bool executed;
         uint nConfirmations;
@@ -57,14 +61,23 @@ contract MSBuilding is Building {
         uint indexed requestIndex
     );
 
-    function submitCreateTokenRequest()
-        public
-        // TODO
-        onlyOwner
-    {
+    function submitCreateTokenRequest(
+        address to,
+        uint256 initialSupply,
+        uint256 initialPricePerToken,
+        uint yieldAtSale
+    ) public onlyOwner returns (uint) {
         uint requestIndex = requests.length;
-        requests.push(CreateTokenRequest({executed: false, nConfirmations: 0}));
+        requests.push(CreateTokenRequest({
+            to: to,
+            initialSupply: initialSupply,
+            initialPricePerToken: initialPricePerToken,
+            yieldAtSale: yieldAtSale,
+            executed: false,
+            nConfirmations: 0
+        }));
         emit SubmitCreateTokenRequest(msg.sender, requestIndex);
+        return requestIndex;
     }
 
     event ConfirmCreateTokenRequest(
@@ -93,7 +106,7 @@ contract MSBuilding is Building {
         uint indexed txIndex
     );
 
-    function executeTransaction(
+    function executeCreateTokenRequest(
         uint requestIndex
     ) public onlyOwner requestExists(requestIndex) notExecuted(requestIndex) {
         CreateTokenRequest storage request = requests[requestIndex];
@@ -105,8 +118,10 @@ contract MSBuilding is Building {
 
         request.executed = true;
 
-        // TODO: create token.
-
+        _mintToken(request.to, id, request.initialSupply, request.initialPricePerToken, request.yieldAtSale);
+        
+        id += 1;
+        
         emit ExecuteCreateTokenRequest(msg.sender, requestIndex);
     }
 
@@ -138,16 +153,5 @@ contract MSBuilding is Building {
         CreateTokenRequest storage request = requests[requestIndex];
 
         return (request.executed, request.nConfirmations);
-    }
-
-    function mint(
-        address to,
-        uint256 id,
-        uint256 _initialSupply,
-        uint256 _initialPricePerToken,
-        uint _yieldAtSale
-    ) public override onlyOwner {
-        // TODO!
-        super.mint(to, id, _initialSupply, _initialPricePerToken, _yieldAtSale);
     }
 }
