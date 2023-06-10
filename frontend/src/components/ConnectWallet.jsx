@@ -4,7 +4,7 @@ import { useAccount, useConnect, useSignMessage, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import axios from "axios";
 
-const ConnectWallet = () => {
+export default function ConnectWallet() {
   const navigate = useNavigate();
 
   const { connectAsync } = useConnect();
@@ -12,7 +12,8 @@ const ConnectWallet = () => {
   const { isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
 
-  const handleAuth = async (signature) => {
+  const handleAuth = async () => {
+    //disconnects the web3 provider if it's already active
     if (isConnected) {
       await disconnectAsync();
     }
@@ -24,7 +25,7 @@ const ConnectWallet = () => {
     const userData = { address: account, chain: chain.id, network: "evm" };
     // making a post request to our 'request-message' endpoint
     const { data } = await axios.post(
-      `${import.meta.env.VITE_APP_SERVER_URL}/request-message`,
+      `${process.env.REACT_APP_SERVER_URL}/request-message`,
       userData,
       {
         headers: {
@@ -37,7 +38,7 @@ const ConnectWallet = () => {
     const signature = await signMessageAsync({ message });
 
     await axios.post(
-      `${import.meta.env.VITE_APP_SERVER_URL}/verify`,
+      `${process.env.REACT_APP_SERVER_URL}/verify`,
       {
         message,
         signature,
@@ -46,16 +47,13 @@ const ConnectWallet = () => {
     );
 
     // redirect to /user
-    //navigate("/user");
+    navigate("/user");
   };
 
   return (
     <div>
-      <button className="btn btn-sm btn-neutral" onClick={() => handleAuth()}>
-        {account ? ` ${truncateAddress(account)}` : "Connect Wallet"}
-      </button>
+      <h3>Web3 Authentication</h3>
+      <button onClick={() => handleAuth()}>Authenticate via MetaMask</button>
     </div>
   );
-};
-
-export default ConnectWallet;
+}
