@@ -10,12 +10,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "^2.0.1",
-    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "chai": "^4.3.7",
     "hardhat": "^2.15.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.1"
+    "@openzeppelin/contracts": "^4.9.1",
+    "ethers": "^6.5.1"
   }
 }
