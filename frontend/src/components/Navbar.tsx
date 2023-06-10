@@ -1,9 +1,11 @@
-import React from "react";
 import ConnectWallet from "./ConnectWallet";
 
-const Navbar = () => {
+const Navbar = ({ lightText = true }) => {
+  const textColorClass = lightText ? "text-white" : "text-black";
   return (
-    <div className="navbar bg-transparent shadow-md fixed top-0 w-full z-50 text-white">
+    <div
+      className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass}`}
+    >
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">

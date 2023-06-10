@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 const Marketplace = () => {
   return (
     <div className="display flex justify-center items-center">
-      <Navbar />
+      <Navbar lightText={false} />
       <div className="card card-compact w-96 bg-base-100 shadow-xl mt-20">
         <figure>
           <img src="/marketplace4.png" alt="Villa" />
