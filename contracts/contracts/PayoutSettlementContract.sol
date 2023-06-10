@@ -24,8 +24,8 @@ contract PayoutSettlementContract {
     );
 
     constructor(address _stableCoinAddress, address _buildingNFTaddress) {
+        stableCoinAddress = IERC20(_stableCoinAddress);
         building = Building(_buildingNFTaddress);
-        stableCoinAddress = IERC20(_buildingNFTaddress);
     }
 
     function setNFTasSold(uint256 id) external {

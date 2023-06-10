@@ -7,8 +7,8 @@ describe("Builder", () => {
   let building: Building;
   before(async () => {
     const Building = await hre.ethers.getContractFactory("Building");
-    building = await Building.deploy("URI");
     const deployerAddress = (await hre.ethers.getSigners())[0].address;
+    building = await Building.deploy("URI", deployerAddress);
     const tx = await building.mint(
       deployerAddress,
       0,
