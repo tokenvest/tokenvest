@@ -26,7 +26,7 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       chainId: 31337,
-      accounts: process.env.MNEMONIC ? { mnemonic: MNEMONIC } : {},
+      accounts: process.env.MNEMONIC ? {mnemonic: MNEMONIC } : {},
     },
     sepolia: {
       chainId: 11155111,
