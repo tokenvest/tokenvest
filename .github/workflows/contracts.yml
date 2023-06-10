@@ -1,5 +1,9 @@
 name: Contracts
-on: [push]
+on:
+  push:
+    paths:
+      - .github/workflows/contracts.yml
+      - contracts/**
 
 jobs:
   tests:

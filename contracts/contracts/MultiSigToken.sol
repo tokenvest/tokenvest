@@ -2,13 +2,17 @@
 
 pragma solidity ^0.8.19;
 
-import "./Building.sol";
+import "./Token.sol";
 
-contract MultiSigWallet is Building {
+contract MultiSigToken is Token {
+    uint private id;
     uint public nConfirmations;
 
     struct CreateTokenRequest {
-        // TODO: add fields needed to create a token.
+        address to;
+        uint256 initialSupply;
+        uint256 initialPricePerToken;
+        uint yieldAtSale;
 
         bool executed;
         uint nConfirmations;
@@ -43,7 +47,7 @@ contract MultiSigWallet is Building {
         address[] memory _owners,
         address _stableCoinAddress,
         uint _numConfirmationsRequired
-    ) Building(_uri, _signerAddress, _owners, _stableCoinAddress) {
+    ) Token(_uri, _signerAddress, _owners, _stableCoinAddress) {
         require(
             _numConfirmationsRequired > 0 &&
                 _numConfirmationsRequired <= _owners.length,
@@ -57,14 +61,23 @@ contract MultiSigWallet is Building {
         uint indexed requestIndex
     );
 
-    function submitCreateTokenRequest()
-        public
-        // TODO
-        onlyOwner
-    {
+    function submitCreateTokenRequest(
+        address to,
+        uint256 initialSupply,
+        uint256 initialPricePerToken,
+        uint yieldAtSale
+    ) public onlyOwner returns (uint) {
         uint requestIndex = requests.length;
-        requests.push(CreateTokenRequest({executed: false, nConfirmations: 0}));
+        requests.push(CreateTokenRequest({
+            to: to,
+            initialSupply: initialSupply,
+            initialPricePerToken: initialPricePerToken,
+            yieldAtSale: yieldAtSale,
+            executed: false,
+            nConfirmations: 0
+        }));
         emit SubmitCreateTokenRequest(msg.sender, requestIndex);
+        return requestIndex;
     }
 
     event ConfirmCreateTokenRequest(
@@ -93,7 +106,7 @@ contract MultiSigWallet is Building {
         uint indexed txIndex
     );
 
-    function executeTransaction(
+    function executeCreateTokenRequest(
         uint requestIndex
     ) public onlyOwner requestExists(requestIndex) notExecuted(requestIndex) {
         CreateTokenRequest storage request = requests[requestIndex];
@@ -105,8 +118,10 @@ contract MultiSigWallet is Building {
 
         request.executed = true;
 
-        // TODO: create token.
-
+        _mintToken(request.to, id, request.initialSupply, request.initialPricePerToken, request.yieldAtSale);
+        
+        id += 1;
+        
         emit ExecuteCreateTokenRequest(msg.sender, requestIndex);
     }
 
