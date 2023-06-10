@@ -1,23 +1,6 @@
-import { useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import axios from 'axios';
-import { useAuth } from '../providers/auth.provider';
 
 const Landing = () => {
-  const { signIn, signOut } = useAuth();
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_APP_SERVER_URL}/api/auth/authenticate`, {
-        // TODO: hacky bug fix
-        withCredentials: !!document.cookie,
-      })
-      .then(({ data }) => {
-        signIn(data);
-      })
-      .catch(() => signOut());
-  }, []);
-
   return (
     <div className="landingpage h-full bg-black pb-5">
       <Navbar />

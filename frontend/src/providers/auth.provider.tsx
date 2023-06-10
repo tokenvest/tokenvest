@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PropsWithChildren, createContext, useContext, useState } from 'react';
+import { PropsWithChildren, createContext, useContext, useState, useEffect } from 'react';
 
 const defaultUser = {
   address: '',
@@ -22,6 +22,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
       withCredentials: true,
     });
   };
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_APP_SERVER_URL}/api/auth/authenticate`, {
+        // TODO: hacky bug fix
+        withCredentials: !!document.cookie,
+      })
+      .then(({ data }) => {
+        signIn(data);
+      })
+      .catch(() => signOut());
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, signIn, signOut }}>
