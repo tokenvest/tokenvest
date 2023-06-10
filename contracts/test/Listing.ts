@@ -18,9 +18,9 @@ describe("ListingContract", () => {
         const eurStableCoin = await EURssFactory.deploy("EURss", "EUR");
         const euroAddress = eurStableCoin.getAddress();
 
-        const Building = await hre.ethers.getContractFactory("Building");
+        const Building = await hre.ethers.getContractFactory("MSBuilding");
         const deployerAddress = (await hre.ethers.getSigners())[0].address;
-        building = await Building.deploy("URI", deployerAddress, [deployerAddress], euroAddress);
+        building = await Building.deploy("URI", deployerAddress, [deployerAddress], euroAddress, 1);
         const tx = await building.mint(deployerAddress, 0, 1_000, 0, 0);
         await tx.wait();
     });

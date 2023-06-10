@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 
 import "./Building.sol";
 
-contract MultiSigWallet is Building {
+contract MSBuilding is Building {
     uint public nConfirmations;
 
     struct CreateTokenRequest {
@@ -138,5 +138,16 @@ contract MultiSigWallet is Building {
         CreateTokenRequest storage request = requests[requestIndex];
 
         return (request.executed, request.nConfirmations);
+    }
+
+    function mint(
+        address to,
+        uint256 id,
+        uint256 _initialSupply,
+        uint256 _initialPricePerToken,
+        uint _yieldAtSale
+    ) public override onlyOwner {
+        // TODO!
+        super.mint(to, id, _initialSupply, _initialPricePerToken, _yieldAtSale);
     }
 }

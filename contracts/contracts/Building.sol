@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./KYC.sol";
 
-contract Building is ERC1155, KYC {
+abstract contract Building is ERC1155, KYC {
     IERC20 public stableCoinAddress;
 
     mapping(uint256 => uint256) totalSupply;
