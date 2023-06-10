@@ -6,6 +6,7 @@ import cookie from '@fastify/cookie';
 import { fastify } from 'fastify';
 import { authRoute } from './router/auth/auth.route';
 import { establishDatabaseConnection } from './database/connect';
+import { kycRoute } from './router/kyc/kyc.route';
 
 const initServer = async (opts?: FastifyServerOptions) => {
   const app = fastify(opts);
@@ -24,10 +25,10 @@ const initServer = async (opts?: FastifyServerOptions) => {
 
   app.register(cookie, {
     secret: import.meta.env.VITE_MORALIS_AUTH_SECRET,
-    hook: 'onRequest',
   });
 
   app.register(authRoute);
+  app.register(kycRoute);
 
   await Moralis.start({
     apiKey: import.meta.env.VITE_MORALIS_API_KEY,
