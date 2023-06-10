@@ -43,13 +43,13 @@ contract PayoutSettlementContract {
         emit AppartmentSold(id, requiredFundsToDistribute, msg.sender);
     }
 
-    function withdrawFunds(uint256 id) {
+    function withdrawFunds(uint256 id) public {
         uint256 balance = building.balanceOf(msg.sender, id);
         if (!payoutAllowedToBeClaimed[id])
             revert PayoutSettlementContract__PayoutsNotClaimableYet();
         if (balance == 0)
             revert PayoutSettlementContract__UserDoesNotHaveABalance();
-        bytes32 emptyData;
+        bytes memory emptyData;
         building.safeTransferFrom(
             msg.sender,
             address(this),

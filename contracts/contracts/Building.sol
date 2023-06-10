@@ -43,7 +43,9 @@ contract Building is ERC1155 {
         totalSupply[id] = _initialSupply;
         initialPricePerToken[id] = _initialPricePerToken;
 
-        payoutPerTokenAtSale[id] = (initialPricePerToken * _yieldAtSale) / 1e18;
+        payoutPerTokenAtSale[id] =
+            (_initialPricePerToken * _yieldAtSale) /
+            1e18;
 
         emit AppartmentMinted(
             id,
