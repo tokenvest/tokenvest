@@ -11,7 +11,6 @@ struct Signature {
 }
 
 contract KYC is Ownable {
-
     address private signerAddress;
 
     mapping(address => bool) public isKYCed;
@@ -49,5 +48,4 @@ contract KYC is Ownable {
         emit SignerChanged(signerAddress, _signerAddress);
         signerAddress = _signerAddress;
     }
-
 }
