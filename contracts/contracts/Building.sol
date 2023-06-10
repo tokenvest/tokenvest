@@ -24,8 +24,12 @@ contract Building is ERC1155, KYC {
     constructor(
         string memory _uri,
         address _signerAddress,
+        address[] memory _owners,
         address _stableCoinAddress
-    ) ERC1155(_uri) KYC(_signerAddress) {
+    )
+        ERC1155(_uri)
+        KYC(_signerAddress, _owners)
+    {
         stableCoinAddress = IERC20(_stableCoinAddress);
     }
 
@@ -44,13 +48,11 @@ contract Building is ERC1155, KYC {
     function mint(
         address to,
         uint256 id,
-        uint256 amount,
-        bytes memory data,
         uint256 _initialSupply,
         uint256 _initialPricePerToken,
         uint _yieldAtSale
-    ) public onlyOwner {
-        _mint(to, id, amount, data);
+    ) public virtual {
+        _mint(to, id, _initialSupply, "");
         totalSupply[id] = _initialSupply;
         initialPricePerToken[id] = _initialPricePerToken;
 

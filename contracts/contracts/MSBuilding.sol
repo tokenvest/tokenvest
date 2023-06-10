@@ -2,15 +2,10 @@
 
 pragma solidity ^0.8.19;
 
-contract MultiSigWallet {
-    address[] public owners;
-    mapping(address => bool) public isOwner;
-    uint public nConfirmations;
+import "./Building.sol";
 
-    modifier onlyOwner() {
-        require(isOwner[msg.sender], "not owner");
-        _;
-    }
+contract MultiSigWallet is Building {
+    uint public nConfirmations;
 
     struct CreateTokenRequest {
         // TODO: add fields needed to create a token.
@@ -42,25 +37,19 @@ contract MultiSigWallet {
         _;
     }
 
-    constructor(address[] memory _owners, uint numConfirmationsRequired) {
-        require(owners.length > 0, "owners required");
+    constructor(
+        string memory _uri,
+        address _signerAddress,
+        address[] memory _owners,
+        address _stableCoinAddress,
+        uint _numConfirmationsRequired
+    ) Building(_uri, _signerAddress, _owners, _stableCoinAddress) {
         require(
-            numConfirmationsRequired > 0 &&
-                numConfirmationsRequired <= owners.length,
+            _numConfirmationsRequired > 0 &&
+                _numConfirmationsRequired <= _owners.length,
             "invalid number of required confirmations"
         );
-
-        for (uint i = 0; i < owners.length; i++) {
-            address owner = owners[i];
-
-            require(owner != address(0), "invalid owner");
-            require(!isOwner[owner], "owner not unique");
-
-            isOwner[owner] = true;
-        }
-
-        owners = _owners;
-        nConfirmations = numConfirmationsRequired;
+        nConfirmations = _numConfirmationsRequired;
     }
 
     event SubmitCreateTokenRequest(
@@ -137,10 +126,6 @@ contract MultiSigWallet {
         isConfirmed[requestIndex][msg.sender] = false;
 
         emit RevokeConfirmation(msg.sender, requestIndex);
-    }
-
-    function getOwners() public view returns (address[] memory) {
-        return owners;
     }
 
     function getRequestCount() public view returns (uint) {

@@ -34,11 +34,7 @@ describe("KYC", () => {
             signerWallet = wallet(1);
 
             const kycFactory = await hre.ethers.getContractFactory("KYC");
-            KYC = await kycFactory.deploy(await signer.getAddress());
-        });
-
-        it("Check Owner", async () => {
-            expect(await KYC.owner()).equal(await deployer.getAddress());
+            KYC = await kycFactory.deploy(await signer.getAddress(), [await deployer.getAddress()]);
         });
 
         it("Is KYC", async () => {
@@ -67,15 +63,6 @@ describe("KYC", () => {
             }
         });
 
-        it("Change Signer", async () => {
-            // Set deployer as signer.
-            const deployerAddress = await deployer.getAddress();
-            const tx = await KYC.setSignerAddress(deployerAddress);
-            await tx.wait();
-        });
-
-        // NOTE: use the deployer as signer!
-
         it("Set KYC", async () => {
             const user0Address = await users[0].getAddress()
             const signature = sign(user0Address, signerWallet);
@@ -91,7 +78,7 @@ describe("KYC", () => {
         it("Revoke KYC, invalid Signer", async () => {
             try {
                 const user0Address = await users[0].getAddress()
-                const tx = await KYC.connect(signer).revokeKYC(user0Address);
+                const tx = await KYC.connect(deployer).revokeKYC(user0Address);
                 await tx.wait();
             } catch ({ message }: any) {
                 expect(message).equal("Transaction reverted without a reason string");
@@ -100,7 +87,7 @@ describe("KYC", () => {
 
         it("Revoke KYC", async () => {
             const user0Address = await users[0].getAddress()
-            const tx = await KYC.connect(deployer).revokeKYC(user0Address);
+            const tx = await KYC.connect(signer).revokeKYC(user0Address);
             await tx.wait();
         });
     });

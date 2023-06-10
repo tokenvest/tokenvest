@@ -15,11 +15,6 @@ contract KYC is Ownable {
 
     mapping(address => bool) public isKYCed;
 
-    event SignerChanged(
-        address indexed previousSigner,
-        address indexed newSigner
-    );
-
     modifier onlyKYCed(address addr) {
         require(isKYCed[addr], "not KYCed");
         _;
@@ -30,7 +25,10 @@ contract KYC is Ownable {
         _;
     }
 
-    constructor(address _signerAddress) {
+    constructor(
+        address _signerAddress,
+        address[] memory _owners
+    ) Ownable(_owners) {
         signerAddress = _signerAddress;
     }
 
@@ -47,10 +45,5 @@ contract KYC is Ownable {
 
     function revokeKYC(address addr) external onlySigner {
         delete isKYCed[addr];
-    }
-
-    function setSignerAddress(address _signerAddress) external onlyOwner {
-        emit SignerChanged(signerAddress, _signerAddress);
-        signerAddress = _signerAddress;
     }
 }

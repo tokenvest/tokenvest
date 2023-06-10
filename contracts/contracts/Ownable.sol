@@ -3,29 +3,24 @@
 pragma solidity ^0.8.19;
 
 abstract contract Ownable {
-
-    address public owner;
-
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+    address[] public owners;
+    mapping(address => bool) public isOwner;
 
     modifier onlyOwner() {
-        require(isOwner(msg.sender));
+        require(isOwner[msg.sender], "not owner");
         _;
     }
 
-    constructor() {
-        owner = msg.sender;
-    }
+    constructor(address[] memory _owners) {
+        require(0 < _owners.length, "owners required");
+        for (uint i = 0; i < _owners.length; i++) {
+            address owner = _owners[i];
 
-    function transferOwnership(address _owner) public onlyOwner {
-        emit OwnershipTransferred(owner, _owner);
-        owner = _owner;
-    }
+            require(owner != address(0), "invalid owner");
+            require(!isOwner[owner], "owner not unique");
 
-    function isOwner(address addr) public view returns (bool) {
-        return owner == addr;
+            isOwner[owner] = true;
+        }
+        owners = _owners;
     }
 }
