@@ -51,7 +51,7 @@ describe("KYC", () => {
 
         it("Is KYC", async () => {
             const user0Address = await users[0].getAddress()
-            expect(await KYC.isKYC(user0Address)).equal(false);
+            expect(await KYC.getKYC(user0Address)).equal(false);
         });
 
         it("Set KYC", async () => {
@@ -60,7 +60,7 @@ describe("KYC", () => {
             const signature = sign(user0Address, signerWallet);
             const tx = await KYC.connect(user0).setKYC(signature);
             await tx.wait();
-            expect(await KYC.isKYC(user0Address)).equal(true);
+            expect(await KYC.getKYC(user0Address)).equal(true);
         })
 
         it("Set Invalid KYC", async () => {

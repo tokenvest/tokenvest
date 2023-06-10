@@ -1,15 +1,16 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Landing from './pages/Landing';
-import { createConfig, configureChains, WagmiConfig } from 'wagmi';
+import { createConfig, configureChains, mainnet, WagmiConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
-import { mainnet } from 'wagmi/chains';
+import Landing from './pages/Landing';
 
-const { provider, webSocketProvider } = configureChains([mainnet], [publicProvider()]);
+const { publicClient, webSocketPublicClient } = configureChains(
+  [mainnet],
+  [publicProvider()],
+);
 
 const config = createConfig({
-  provider,
-  webSocketProvider,
-  autoConnect: true,
+  publicClient,
+  webSocketPublicClient,
 });
 
 const router = createBrowserRouter([

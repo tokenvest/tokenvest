@@ -5,6 +5,7 @@ import {
   authMessageSchema,
   authVerifySchema,
 } from './auth.schema';
+import Moralis from 'moralis';
 
 export const authRoute: FastifyPluginCallback = (app, _, next) => {
   app.route({
@@ -14,11 +15,17 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
     handler: async (req: AuthMessageRequest, res) => {
       const { address, chain, network } = req.body;
       try {
-        const message = await app.moralis.Auth.requestMessage({
+        const config = {
+          domain: import.meta.env.VITE_MORALIS_HOST,
+          statement: 'Please sign this message to confirm your identity.',
+          uri: import.meta.env.VITE_MORALIS_REACT_URL,
+          timeout: 60,
+        };
+
+        const message = await Moralis.Auth.requestMessage({
           address,
           chain,
-          network,
-          ...app.moralis.config,
+          ...config,
         });
 
         res.send(message);
@@ -37,7 +44,7 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
       const { message, signature } = req.body;
 
       try {
-        const verify = await app.moralis.Auth.verify({
+        const verify = await Moralis.Auth.verify({
           message,
           signature,
           networkType: 'evm',
