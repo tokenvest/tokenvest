@@ -31,6 +31,8 @@ contract ListingContract {
         uint256 numerator,
         uint256 denominator
     ) public {
+        require(token.isApprovedForAll(msg.sender, address(this)), "not approved");
+        
         uint index = listings.length;
         Listing memory listing = Listing({
             seller: msg.sender,
