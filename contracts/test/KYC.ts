@@ -13,12 +13,6 @@ function wallet(index: number): ethers.HDNodeWallet {
 
 describe("KYC", () => {
 
-    async function deploy(signer: ethers.Signer) {
-        const KYC = await hre.ethers.getContractFactory("KYC");
-        const kyc = await KYC.deploy(await signer.getAddress());
-        return { kyc };
-    }
-
     describe("Deployment", () => {
 
         let deployer: ethers.Signer;

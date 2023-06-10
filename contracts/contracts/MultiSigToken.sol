@@ -61,7 +61,7 @@ contract MultiSigToken is Token {
         uint indexed requestIndex
     );
 
-    function submitCreateTokenRequest(
+    function submitMintRequest(
         address to,
         uint256 initialSupply,
         uint256 initialPricePerToken,
@@ -85,7 +85,7 @@ contract MultiSigToken is Token {
         uint indexed txIndex
     );
 
-    function confirmCreateTokenRequest(
+    function signMintRequest(
         uint requestIndex
     )
         public
@@ -106,7 +106,7 @@ contract MultiSigToken is Token {
         uint indexed txIndex
     );
 
-    function executeCreateTokenRequest(
+    function mint(
         uint requestIndex
     ) public onlyOwner requestExists(requestIndex) notExecuted(requestIndex) {
         CreateTokenRequest storage request = requests[requestIndex];
@@ -127,7 +127,7 @@ contract MultiSigToken is Token {
 
     event RevokeConfirmation(address indexed owner, uint indexed txIndex);
 
-    function revokeConfirmation(
+    function revokeSignature(
         uint requestIndex
     ) public onlyOwner requestExists(requestIndex) notExecuted(requestIndex) {
         CreateTokenRequest storage request = requests[requestIndex];
