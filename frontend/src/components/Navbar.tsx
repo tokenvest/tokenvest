@@ -31,7 +31,7 @@ const Navbar = ({ lightText = true }) => {
             className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-500 rounded-box w-52"
           >
             <li>
-              <a>Item 1</a>
+              <a>Marketplace</a>
             </li>
             <li>
               <a>Parent</a>
@@ -45,7 +45,7 @@ const Navbar = ({ lightText = true }) => {
               </ul>
             </li>
             <li>
-              <a>Item 3</a>
+              <a>Dashboard</a>
             </li>
           </ul>
         </div>
@@ -59,7 +59,7 @@ const Navbar = ({ lightText = true }) => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 ">
           <li>
-            <a>Item 1</a>
+            <a>Marketplace</a>
           </li>
           <li tabIndex={0} className="bg-transparent">
             <details className="bg-transparent">
@@ -75,7 +75,7 @@ const Navbar = ({ lightText = true }) => {
             </details>
           </li>
           <li>
-            <a>Item 3</a>
+            <a>Dashboard</a>
           </li>
         </ul>
       </div>
