@@ -2,18 +2,17 @@
 
 pragma solidity ^0.8.19;
 
-contract MultiSigWallet {
-    address[] public owners;
-    mapping(address => bool) public isOwner;
+import "./Building.sol";
+
+contract MSBuilding is Building {
+    uint private id;
     uint public nConfirmations;
 
-    modifier onlyOwner() {
-        require(isOwner[msg.sender], "not owner");
-        _;
-    }
-
     struct CreateTokenRequest {
-        // TODO: add fields needed to create a token.
+        address to;
+        uint256 initialSupply;
+        uint256 initialPricePerToken;
+        uint yieldAtSale;
 
         bool executed;
         uint nConfirmations;
@@ -42,25 +41,19 @@ contract MultiSigWallet {
         _;
     }
 
-    constructor(address[] memory _owners, uint numConfirmationsRequired) {
-        require(owners.length > 0, "owners required");
+    constructor(
+        string memory _uri,
+        address _signerAddress,
+        address[] memory _owners,
+        address _stableCoinAddress,
+        uint _numConfirmationsRequired
+    ) Building(_uri, _signerAddress, _owners, _stableCoinAddress) {
         require(
-            numConfirmationsRequired > 0 &&
-                numConfirmationsRequired <= owners.length,
+            _numConfirmationsRequired > 0 &&
+                _numConfirmationsRequired <= _owners.length,
             "invalid number of required confirmations"
         );
-
-        for (uint i = 0; i < owners.length; i++) {
-            address owner = owners[i];
-
-            require(owner != address(0), "invalid owner");
-            require(!isOwner[owner], "owner not unique");
-
-            isOwner[owner] = true;
-        }
-
-        owners = _owners;
-        nConfirmations = numConfirmationsRequired;
+        nConfirmations = _numConfirmationsRequired;
     }
 
     event SubmitCreateTokenRequest(
@@ -68,14 +61,23 @@ contract MultiSigWallet {
         uint indexed requestIndex
     );
 
-    function submitCreateTokenRequest()
-        public
-        // TODO
-        onlyOwner
-    {
+    function submitCreateTokenRequest(
+        address to,
+        uint256 initialSupply,
+        uint256 initialPricePerToken,
+        uint yieldAtSale
+    ) public onlyOwner returns (uint) {
         uint requestIndex = requests.length;
-        requests.push(CreateTokenRequest({executed: false, nConfirmations: 0}));
+        requests.push(CreateTokenRequest({
+            to: to,
+            initialSupply: initialSupply,
+            initialPricePerToken: initialPricePerToken,
+            yieldAtSale: yieldAtSale,
+            executed: false,
+            nConfirmations: 0
+        }));
         emit SubmitCreateTokenRequest(msg.sender, requestIndex);
+        return requestIndex;
     }
 
     event ConfirmCreateTokenRequest(
@@ -104,7 +106,7 @@ contract MultiSigWallet {
         uint indexed txIndex
     );
 
-    function executeTransaction(
+    function executeCreateTokenRequest(
         uint requestIndex
     ) public onlyOwner requestExists(requestIndex) notExecuted(requestIndex) {
         CreateTokenRequest storage request = requests[requestIndex];
@@ -116,8 +118,10 @@ contract MultiSigWallet {
 
         request.executed = true;
 
-        // TODO: create token.
-
+        _mintToken(request.to, id, request.initialSupply, request.initialPricePerToken, request.yieldAtSale);
+        
+        id += 1;
+        
         emit ExecuteCreateTokenRequest(msg.sender, requestIndex);
     }
 
@@ -137,10 +141,6 @@ contract MultiSigWallet {
         isConfirmed[requestIndex][msg.sender] = false;
 
         emit RevokeConfirmation(msg.sender, requestIndex);
-    }
-
-    function getOwners() public view returns (address[] memory) {
-        return owners;
     }
 
     function getRequestCount() public view returns (uint) {

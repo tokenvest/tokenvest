@@ -1,7 +1,6 @@
 import hre from "hardhat";
-import { Building } from "../typechain-types";
+import { MSBuilding } from "../typechain-types";
 import { ethers } from "ethers";
-import { getAllListings } from "../sdk/Listings";
 import { expect } from "chai";
 
 import { HardhatNetworkHDAccountsConfig } from "hardhat/types";
@@ -16,8 +15,8 @@ function wallet(index: number): ethers.HDNodeWallet {
   );
 }
 
-describe("Builder", () => {
-  let building: Building;
+describe("Building", () => {
+  let building: MSBuilding;
   before(async () => {
     let deployer: ethers.Signer;
     let deployerWallet: ethers.HDNodeWallet;
@@ -28,23 +27,19 @@ describe("Builder", () => {
     const eurStableCoin = await EURssFactory.deploy("EURss", "EUR");
     const euroAddress = eurStableCoin.getAddress();
 
-    const Building = await hre.ethers.getContractFactory("Building");
+    const Building = await hre.ethers.getContractFactory("MSBuilding");
     const deployerAddress = (await hre.ethers.getSigners())[0].address;
-    building = await Building.deploy("URI", deployerAddress, euroAddress);
-    const tx = await building.mint(
-      deployerAddress,
-      0,
-      1_000,
-      new Uint8Array(),
-      1_000,
-      0,
-      0
-    );
-    await tx.wait();
+    building = await Building.deploy("URI", deployerAddress, [deployerAddress], euroAddress, 1);
+    {
+      const tx = await building.submitCreateTokenRequest(deployerAddress, 1_000, 0, 0);
+      await tx.wait();
+      await (await building.confirmCreateTokenRequest(0)).wait();
+      await (await building.executeCreateTokenRequest(0)).wait();
+    }
   });
 
   it("no nfts", async () => {
     const supply = await building.getTotalSupply(0);
-    expect(supply).to.be.equal(1000);
+    expect(supply).to.be.equal(1_000);
   });
 });

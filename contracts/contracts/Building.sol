@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./KYC.sol";
 
-contract Building is ERC1155, KYC {
+abstract contract Building is ERC1155, KYC {
     IERC20 public stableCoinAddress;
 
     mapping(uint256 => uint256) totalSupply;
@@ -24,8 +24,12 @@ contract Building is ERC1155, KYC {
     constructor(
         string memory _uri,
         address _signerAddress,
+        address[] memory _owners,
         address _stableCoinAddress
-    ) ERC1155(_uri) KYC(_signerAddress) {
+    )
+        ERC1155(_uri)
+        KYC(_signerAddress, _owners)
+    {
         stableCoinAddress = IERC20(_stableCoinAddress);
     }
 
@@ -41,16 +45,14 @@ contract Building is ERC1155, KYC {
         return payoutPerTokenAtSale[id];
     }
 
-    function mint(
+    function _mintToken(
         address to,
         uint256 id,
-        uint256 amount,
-        bytes memory data,
         uint256 _initialSupply,
         uint256 _initialPricePerToken,
         uint _yieldAtSale
-    ) public onlyOwner {
-        _mint(to, id, amount, data);
+    ) internal {
+        _mint(to, id, _initialSupply, "");
         totalSupply[id] = _initialSupply;
         initialPricePerToken[id] = _initialPricePerToken;
 
