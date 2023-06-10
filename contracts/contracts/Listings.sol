@@ -2,12 +2,13 @@
 
 pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./IToken.sol";
 
 contract Listings {
     struct Listing {
         address seller;
-        IERC1155 token;
+        IToken token;
         uint256 id;
         uint256 unitsAvailable;
         // wei/unit
@@ -24,7 +25,7 @@ contract Listings {
     }
 
     function list(
-        IERC1155 token,
+        IToken token,
         uint256 id,
         uint256 units,
         uint256 unitPrice
@@ -68,8 +69,8 @@ contract Listings {
 
         uint256 totalCost = (units * listing.unitPrice);
         require(msg.value == totalCost);
-        (bool success, ) = listing.seller.call{value: totalCost}("");
-        require(success, "transfer failed.");
+
+        require(listing.token.stableCoinAddress().transferFrom(msg.sender, listing.seller, totalCost), "transfer failed.");
 
         emit ListingChanged(listing.seller, index);
     }
