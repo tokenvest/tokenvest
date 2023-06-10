@@ -18,15 +18,15 @@ contract Building is ERC1155 {
 
     constructor(string memory _uri) ERC1155(_uri) {}
 
-    function getTotalSupply(uint256 id) public returns (uint256) {
+    function getTotalSupply(uint256 id) public view returns (uint256) {
         return totalSupply[id];
     }
 
-    function getInitialPricePerToken(uint256 id) public returns (uint256) {
+    function getInitialPricePerToken(uint256 id) public view returns (uint256) {
         return initialPricePerToken[id];
     }
 
-    function getPayoutPerTokenAtSale(uint256 id) public returns (uint256) {
+    function getPayoutPerTokenAtSale(uint256 id) public view returns (uint256) {
         return payoutPerTokenAtSale[id];
     }
 
