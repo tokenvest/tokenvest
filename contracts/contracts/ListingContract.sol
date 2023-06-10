@@ -11,8 +11,7 @@ contract ListingContract {
         uint256 id;
         uint256 unitsAvailable;
         // wei/unit
-        uint256 priceNumerator;
-        uint256 priceDenominator;
+        uint256 unitPrice;
     }
 
     Listing[] public listings;
@@ -21,26 +20,24 @@ contract ListingContract {
 
     function cost(uint256 index, uint256 units) public view returns (uint256) {
         Listing storage listing = listings[index];
-        return (units * listing.priceNumerator) / listing.priceDenominator;
+        return units * listing.unitPrice;
     }
 
     function list(
         IERC1155 token,
         uint256 id,
         uint256 units,
-        uint256 numerator,
-        uint256 denominator
+        uint256 unitPrice
     ) public {
         require(token.isApprovedForAll(msg.sender, address(this)), "not approved");
-        
+
         uint index = listings.length;
         Listing memory listing = Listing({
             seller: msg.sender,
             token: token,
             id: id,
             unitsAvailable: units,
-            priceNumerator: numerator,
-            priceDenominator: denominator
+            unitPrice: unitPrice
         });
 
         listings.push(listing);
@@ -66,7 +63,7 @@ contract ListingContract {
             ""
         );
 
-        uint256 totalCost = (units * listing.priceNumerator) / listing.priceDenominator;
+        uint256 totalCost = (units * listing.unitPrice);
         require(msg.value == totalCost);
         (bool success, ) = listing.seller.call{value: totalCost}("");
         require(success, "transfer failed.");

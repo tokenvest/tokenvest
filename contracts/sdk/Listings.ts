@@ -5,8 +5,7 @@ export type Listing = {
     token: string
     id: number
     units: number
-    numerator: number
-    denominator: number
+    unitPrice: number
 }
 
 export async function getAllListings(listings: ListingContract): Promise<Listing[]> {
@@ -14,8 +13,8 @@ export async function getAllListings(listings: ListingContract): Promise<Listing
     let i = 0;
     while (true) {
         try {
-            const [seller, token, id, units, num, denom] = await listings.listings(i++);
-            ls.push({ seller, token, id, units, numerator: num, denominator: denom });
+            const [seller, token, id, units, unitPrice] = await listings.listings(i++);
+            ls.push({ seller, token, id, units, unitPrice });
         } catch (e) {
             break;
         }

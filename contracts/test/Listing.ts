@@ -12,8 +12,8 @@ describe("ListingContract", () => {
         listing = await ListingsContract.deploy();
 
         const Building = await hre.ethers.getContractFactory("Building");
-        building = await Building.deploy("URI");
         const deployerAddress = (await hre.ethers.getSigners())[0].address;
+        building = await Building.deploy("URI", deployerAddress);
         const tx = await building.mint(deployerAddress, 0, 1_000, new Uint8Array(), 1_000, 0, 0);
         await tx.wait();
     });
@@ -24,10 +24,7 @@ describe("ListingContract", () => {
 
     it("can not list an asset without approval", async () => {
         try {
-            const tx = await listing.list(
-                await building.getAddress(),
-                0, 100, 1, 10
-            );
+            const tx = await listing.list(await building.getAddress(), 0, 100, 1);
             await tx.wait();
         } catch ({ message }: any) {
             expect(message).equal("VM Exception while processing transaction: reverted with reason string 'not approved'");
@@ -40,10 +37,7 @@ describe("ListingContract", () => {
     });
 
     it("list an asset", async () => {
-        const tx = await listing.list(
-            await building.getAddress(),
-            0, 100, 1, 10
-        );
+        const tx = await listing.list(await building.getAddress(), 0, 100, 1);
         await tx.wait();
     });
 
