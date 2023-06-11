@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 interface FormState {
   name: string;
@@ -19,6 +20,7 @@ const initialFormState: FormState = {
 
 const Register: React.FC = () => {
   const [formState, setFormState] = useState<FormState>(initialFormState);
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
@@ -42,6 +44,7 @@ const Register: React.FC = () => {
 
     // Here you can handle the form submission, for example send the data to an API
     console.log(formState);
+    navigate("/");
   };
 
   return (
