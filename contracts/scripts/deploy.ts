@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import { readFileSync, writeFileSync } from "fs";
 
 type Config = {
@@ -15,7 +15,7 @@ function loadConfig(): Config {
 
 // npx hardhat run scripts/deploy.ts --network sepolia
 async function main() {
-    const config = loadConfig();
+    const config = network.name === "hardhat" ? {} : loadConfig();
 
     const [deployer] = await ethers.getSigners();
 
@@ -69,7 +69,9 @@ async function main() {
 
     const raw = JSON.stringify(config, null, 4);
     console.log("\nRaw Config:", raw);
-    writeFileSync("scripts/config.json", raw, "utf8");
+    if (network.name !== "hardhat") {
+        writeFileSync("scripts/config.json", raw, "utf8");
+    }
 }
 
 main()

@@ -1,12 +1,18 @@
 # TokenVest by ShitCoinShacks
 
-ERC-1155 for the apartment
-KYC contract
-PayoutSettlementContract => money arrives there and flag is set for "payout claimable"
-ListingContract
-TradingContract
+## Smart Contracts
 
-TODO: Reginald => out of the box multisig capabilities
+### Deployed Contracts (testnet)
+
+You can find the list of deployed contract addresses [here](./contracts/scripts/config.json).
+
+### Running Tests
+
+```shell
+cd contracts
+npm install
+npm test
+```
 
 ## KYC
 
