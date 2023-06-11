@@ -31,7 +31,7 @@ describe("Happy Flow", () => {
     it("Deploy EURss", async () => {
         const eurFactory = await hre.ethers.getContractFactory("EURss");
         EURss = await eurFactory.deploy();
-        expect(await EURss.balanceOf(deployer.address)).to.be.equal(BigInt(1e6) * BigInt(1e18));
+        expect(await EURss.balanceOf(deployer.address)).to.be.equal(BigInt(1e12) * BigInt(1e18));
     });
 
     let MultiSigToken: MultiSigToken;

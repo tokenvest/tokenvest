@@ -6,18 +6,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract EURss is ERC20 {
     constructor() ERC20("EURss", "EUR") {
-        _mint(msg.sender, 1 * 1e6 * 1e18);
-        _mint(
-            address(
-                bytes20(bytes("0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec"))
-            ),
-            1 * 1e6 * 1e18
-        );
-        _mint(
-            address(
-                bytes20(bytes("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"))
-            ),
-            1 * 1e6 * 1e18
-        );
+        _mint(msg.sender, 1e12 * 1e18);
     }
 }
