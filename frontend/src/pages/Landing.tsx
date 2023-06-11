@@ -4,9 +4,22 @@ import { useAccount } from "wagmi";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+import contractAbi from "../../contractAbi.json";
+import { ethers } from "ethers";
+
 const Landing = () => {
   const { isConnected } = useAccount();
   const [balance, setBalance] = useState(0);
+  const contractAddress = "0xC7fCA70F31B9d68Fa39178dDa8b0e3B3A824642F";
+  const provider = new ethers.JsonRpcProvider(
+    import.meta.env.VITE_APP_ALCHEMY_URL
+  );
+
+  const contract = new ethers.Contract(
+    contractAddress,
+    contractAbi.abi,
+    provider
+  );
 
   useEffect(() => {
     axios
