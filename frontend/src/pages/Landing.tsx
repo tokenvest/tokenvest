@@ -1,4 +1,4 @@
-import Navbar from '../components/Navbar';
+import Navbar from "../components/Navbar";
 
 const Landing = () => {
   return (
@@ -60,7 +60,7 @@ const Landing = () => {
             Your slice of the world's properties, tokenized and accessible.
           </div>
           <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-            <a href="#slide3" className="btn btn-circle btn-sm">
+            <a href="#slide3" className="btn btn-circle btn-sm ">
               ❮
             </a>
             <a href="#slide1" className="btn btn-circle btn-sm">
@@ -80,10 +80,11 @@ const Landing = () => {
           <div className="card-body">
             <h2 className="card-title">South Sky Villa</h2>
             <p>
-              South Sky Villa is a luxurious property offering panoramic views and modern
-              interiors. This desirable residence features spacious living areas, a
-              high-end kitchen, and private, comfortable bedrooms. Enjoy the perfect blend
-              of elegance, comfort, and natural beauty at South Sky Villa.
+              South Sky Villa is a luxurious property offering panoramic views
+              and modern interiors. This desirable residence features spacious
+              living areas, a high-end kitchen, and private, comfortable
+              bedrooms. Enjoy the perfect blend of elegance, comfort, and
+              natural beauty at South Sky Villa.
             </p>
             <div className="card-actions justify-end">
               <button className="btn btn-primary">Buy Now</button>

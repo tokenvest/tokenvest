@@ -30,7 +30,7 @@ const Navbar = ({ lightText = true }) => {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-500 rounded-box w-52"
           >
-            <li>
+            <li onClick={() => navigate("/Marketplace")}>
               <a>Marketplace</a>
             </li>
             <li>
@@ -58,7 +58,7 @@ const Navbar = ({ lightText = true }) => {
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 ">
-          <li>
+          <li onClick={() => navigate("/Marketplace")}>
             <a>Marketplace</a>
           </li>
           <li tabIndex={0} className="bg-transparent">
