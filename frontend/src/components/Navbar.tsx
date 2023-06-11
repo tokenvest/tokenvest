@@ -1,9 +1,15 @@
 import ConnectWallet from "./ConnectWallet";
 import { useNavigate } from "react-router-dom";
+import { useAccount } from "wagmi";
 
 const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();
   const textColorClass = lightText ? "text-white" : "text-black";
+
+  const { isConnected, address } = useAccount();
+
+  console.log("navbar : ", isConnected, address);
+
   return (
     <div
       className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass}`}

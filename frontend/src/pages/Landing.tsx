@@ -1,6 +1,10 @@
 import Navbar from "../components/Navbar";
+import { useAccount } from "wagmi";
 
 const Landing = () => {
+  const { isConnected, address } = useAccount();
+
+  console.log("navbar : ", isConnected, address);
   return (
     <div className="landingpage h-full bg-black pb-5">
       <Navbar />
