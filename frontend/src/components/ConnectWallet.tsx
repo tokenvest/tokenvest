@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useAuth } from '../providers/auth.provider';
 
 export default function ConnectWallet({ showAddress = false }: { showAddress: boolean }) {
+  const navigate = useNavigate();
   const { isAuthorized, user, signIn, signOut } = useAuth();
 
   const { connectAsync } = useConnect();
@@ -14,11 +15,9 @@ export default function ConnectWallet({ showAddress = false }: { showAddress: bo
   const { isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
 
-  // truncate the address to be displayed on the button
   const truncatedAddress = `${user?.address.slice(0, 6)}...${user?.address.slice(-4)}`;
 
   const handleDisconnect = async () => {
-    //disconnects the web3 provider if it's already active
     if (isConnected) {
       console.log('disconnecting');
       disconnect();
@@ -27,18 +26,16 @@ export default function ConnectWallet({ showAddress = false }: { showAddress: bo
   };
 
   const handleAuth = async () => {
-    //disconnects the web3 provider if it's already active
     if (isConnected) {
       console.log('disconnecting');
     }
-    // enabling the web3 provider metamask
+
     const { account, chain } = await connectAsync({
       connector: new InjectedConnector(),
     });
 
     const userData = { address: account, chain: chain.id, network: 'evm' };
 
-    // making a post request to our 'request-message' endpoint
     const { data } = await axios.post(
       `${import.meta.env.VITE_APP_SERVER_URL}/api/auth/request-message`,
       userData,
@@ -49,7 +46,6 @@ export default function ConnectWallet({ showAddress = false }: { showAddress: bo
       },
     );
     const message = data.message;
-    // signing the received message via metamask
     const signature = await signMessageAsync({ message });
 
     try {
@@ -59,12 +55,24 @@ export default function ConnectWallet({ showAddress = false }: { showAddress: bo
           message,
           signature,
         },
-        { withCredentials: true }, // set cookie from Express server
+        { withCredentials: true },
       );
 
       signIn(data);
     } catch {
       signOut();
+    }
+
+    handleKYC();
+  };
+
+  const handleKYC = async () => {
+    try {
+      await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/api/kyc/verify`, {
+        withCredentials: true,
+      });
+    } catch {
+      navigate('/register');
     }
   };
 

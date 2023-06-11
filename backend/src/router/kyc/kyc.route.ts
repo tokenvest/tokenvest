@@ -26,7 +26,7 @@ export const kycRoute: FastifyPluginCallback = (app, _, next) => {
         const account = await User.findOne({ account: data.address });
 
         if (account) {
-          throw new Error();
+          return res.status(400).send("You've already registered");
         }
 
         try {

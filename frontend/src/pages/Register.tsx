@@ -19,6 +19,8 @@ const initialFormState: FormState = {
   idPic: null,
 };
 
+// todo: protected page if not connected
+
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const [formState, setFormState] = useState<FormState>(initialFormState);
@@ -54,9 +56,9 @@ const Register: React.FC = () => {
           withCredentials: true,
         },
       );
-
+    } catch {
       navigate('/');
-    } catch (e) {}
+    }
   };
 
   return (
@@ -69,7 +71,7 @@ const Register: React.FC = () => {
             <div className="px-5 py-7">
               <form onSubmit={handleSubmit}>
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Name
+                  Name *
                 </label>
                 <input
                   type="text"
@@ -77,10 +79,11 @@ const Register: React.FC = () => {
                   value={formState.name}
                   onChange={handleInputChange}
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  required
                 />
 
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Surname
+                  Surname *
                 </label>
                 <input
                   type="text"
@@ -88,10 +91,11 @@ const Register: React.FC = () => {
                   value={formState.surname}
                   onChange={handleInputChange}
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  required
                 />
 
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Address
+                  Address *
                 </label>
                 <input
                   type="text"
@@ -99,10 +103,11 @@ const Register: React.FC = () => {
                   value={formState.address}
                   onChange={handleInputChange}
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  required
                 />
 
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Picture of your face
+                  Picture of your face *
                 </label>
                 <input
                   type="file"
@@ -115,10 +120,11 @@ const Register: React.FC = () => {
                 file:text-sm file:font-semibold
                 file:bg-violet-50 file:text-violet-700
                 hover:file:bg-violet-100"
+                  required
                 />
 
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Picture of your ID
+                  Picture of your ID *
                 </label>
                 <input
                   type="file"
@@ -130,6 +136,7 @@ const Register: React.FC = () => {
                 file:text-sm file:font-semibold
                 file:bg-violet-50 file:text-violet-700
                 hover:file:bg-violet-100"
+                  required
                 />
 
                 <button
