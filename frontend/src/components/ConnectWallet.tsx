@@ -7,7 +7,6 @@ import axios from 'axios';
 import { useAuth } from '../providers/auth.provider';
 
 export default function ConnectWallet() {
-  const navigate = useNavigate();
   const { isAuthorized, user, signIn, signOut } = useAuth();
 
   const { connectAsync } = useConnect();
@@ -67,10 +66,8 @@ export default function ConnectWallet() {
     } catch {
       signOut();
     }
-
-    // redirect to /user
-    navigate('/marketplace');
   };
+
   const handleClick = isConnected || isAuthorized ? handleDisconnect : handleAuth;
 
   return (
