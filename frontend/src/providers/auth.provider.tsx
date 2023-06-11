@@ -6,6 +6,7 @@ const defaultUser = {
 };
 
 const AuthContext = createContext({
+  isAuthorized: false,
   user: defaultUser,
   signIn: (user: any) => {},
   signOut: () => {},
@@ -36,7 +37,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ isAuthorized: !!user?.address, user, signIn, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );
