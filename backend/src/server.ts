@@ -7,6 +7,7 @@ import { fastify } from 'fastify';
 import { authRoute } from './router/auth/auth.route';
 import { establishDatabaseConnection } from './database/connect';
 import { kycRoute } from './router/kyc/kyc.route';
+import { balanceRoute } from './router/balance/balance.route';
 
 const initServer = async (opts?: FastifyServerOptions) => {
   const app = fastify(opts);
@@ -28,6 +29,7 @@ const initServer = async (opts?: FastifyServerOptions) => {
   });
 
   app.register(authRoute);
+  app.register(balanceRoute);
   app.register(kycRoute);
 
   await Moralis.start({
