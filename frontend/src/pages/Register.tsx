@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import Navbar from '../components/Navbar';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface FormState {
   name: string;
@@ -11,16 +12,16 @@ interface FormState {
 }
 
 const initialFormState: FormState = {
-  name: "",
-  surname: "",
-  address: "",
+  name: '',
+  surname: '',
+  address: '',
   facePic: null,
   idPic: null,
 };
 
 const Register: React.FC = () => {
-  const [formState, setFormState] = useState<FormState>(initialFormState);
   const navigate = useNavigate();
+  const [formState, setFormState] = useState<FormState>(initialFormState);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
@@ -31,7 +32,7 @@ const Register: React.FC = () => {
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "facePic" | "idPic"
+    type: 'facePic' | 'idPic',
   ) => {
     setFormState({
       ...formState,
@@ -39,12 +40,23 @@ const Register: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Here you can handle the form submission, for example send the data to an API
-    console.log(formState);
-    navigate("/");
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_APP_SERVER_URL}/api/kyc/register`,
+        formState,
+        {
+          headers: {
+            'content-type': 'application/json',
+          },
+          withCredentials: true,
+        },
+      );
+
+      navigate('/');
+    } catch (e) {}
   };
 
   return (
@@ -95,7 +107,7 @@ const Register: React.FC = () => {
                 <input
                   type="file"
                   name="facePic"
-                  onChange={(e) => handleFileChange(e, "facePic")}
+                  onChange={(e) => handleFileChange(e, 'facePic')}
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 
                 block w-full text-sm text-slate-500
                 file:mr-4 file:py-2 file:px-4
@@ -111,7 +123,7 @@ const Register: React.FC = () => {
                 <input
                   type="file"
                   name="idPic"
-                  onChange={(e) => handleFileChange(e, "idPic")}
+                  onChange={(e) => handleFileChange(e, 'idPic')}
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 block w-full text-sm text-slate-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-full file:border-0
