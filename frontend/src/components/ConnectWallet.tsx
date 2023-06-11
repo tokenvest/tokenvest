@@ -6,7 +6,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import axios from 'axios';
 import { useAuth } from '../providers/auth.provider';
 
-export default function ConnectWallet() {
+export default function ConnectWallet({ showAddress = false }: { showAddress: boolean }) {
   const { isAuthorized, user, signIn, signOut } = useAuth();
 
   const { connectAsync } = useConnect();
@@ -68,12 +68,16 @@ export default function ConnectWallet() {
     }
   };
 
+  //todo
   const handleClick = isConnected || isAuthorized ? handleDisconnect : handleAuth;
 
   return (
     <div>
-      <button className="btn btn-neutral btn-sm" onClick={handleClick}>
-        {isAuthorized ? truncatedAddress : 'Connect'}
+      <button
+        className={`btn ${showAddress ? 'btn-neutral btn-sm' : 'btn-primary'}`}
+        onClick={handleClick}
+      >
+        {isAuthorized ? (showAddress ? truncatedAddress : 'Buy Now') : 'Connect'}
       </button>
     </div>
   );

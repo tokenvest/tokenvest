@@ -1,10 +1,7 @@
-import Navbar from "../components/Navbar";
-import { useAccount } from "wagmi";
+import ConnectWallet from '../components/ConnectWallet';
+import Navbar from '../components/Navbar';
 
 const Landing = () => {
-  const { isConnected, address } = useAccount();
-
-  console.log("navbar : ", isConnected, address);
   return (
     <div className="landingpage h-full bg-black pb-5">
       <Navbar />
@@ -64,7 +61,7 @@ const Landing = () => {
             Your slice of the world's properties, tokenized and accessible.
           </div>
           <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-            <a href="#slide3" className="btn btn-circle btn-sm ">
+            <a href="#slide3" className="btn btn-circle btn-sm">
               ❮
             </a>
             <a href="#slide1" className="btn btn-circle btn-sm">
@@ -77,21 +74,20 @@ const Landing = () => {
         <p className=" text-white w-full display flex justify-center items-center font-bold text-3xl">
           Top Properties
         </p>
-        <div className="card card-compact w-96 bg-gray-800 text-white shadow-xl mt-20">
+        <div className="card card-compact w-96 bg-base-100 shadow-xl m-5">
           <figure>
             <img src="/marketplace4.png" alt="Villa" />
           </figure>
-          <div className="card-body">
+          <div className="card-body bg-gray-900 text-white">
             <h2 className="card-title">South Sky Villa</h2>
             <p>
-              South Sky Villa is a luxurious property offering panoramic views
-              and modern interiors. This desirable residence features spacious
-              living areas, a high-end kitchen, and private, comfortable
-              bedrooms. Enjoy the perfect blend of elegance, comfort, and
-              natural beauty at South Sky Villa.
+              South Sky Villa is a luxurious property offering panoramic views and modern
+              interiors. This desirable residence features spacious living areas, a
+              high-end kitchen, and private, comfortable bedrooms. Enjoy the perfect blend
+              of elegance, comfort, and natural beauty at South Sky Villa.
             </p>
             <div className="card-actions justify-end">
-              <button className="btn btn-primary">Buy Now</button>
+              <ConnectWallet showAddress={false} />
             </div>
           </div>
         </div>

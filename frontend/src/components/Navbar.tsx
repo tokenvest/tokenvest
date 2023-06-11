@@ -1,9 +1,9 @@
-import ConnectWallet from "./ConnectWallet";
-import { useNavigate } from "react-router-dom";
+import ConnectWallet from './ConnectWallet';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();
-  const textColorClass = lightText ? "text-white" : "text-black";
+  const textColorClass = lightText ? 'text-white' : 'text-black';
 
   return (
     <div
@@ -31,7 +31,7 @@ const Navbar = ({ lightText = true }) => {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-500 rounded-box w-52"
           >
-            <li onClick={() => navigate("/Marketplace")}>
+            <li onClick={() => navigate('/Marketplace')}>
               <a>Marketplace</a>
             </li>
             <li>
@@ -52,14 +52,14 @@ const Navbar = ({ lightText = true }) => {
         </div>
         <a
           className="btn btn-ghost normal-case font-bold text-xl"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
         >
           TokenVest
         </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 ">
-          <li onClick={() => navigate("/Marketplace")}>
+          <li onClick={() => navigate('/Marketplace')}>
             <a>Marketplace</a>
           </li>
           <li tabIndex={0} className="bg-transparent">
@@ -81,7 +81,7 @@ const Navbar = ({ lightText = true }) => {
         </ul>
       </div>
       <div className="navbar-end">
-        <ConnectWallet />
+        <ConnectWallet showAddress={true} />
       </div>
     </div>
   );
