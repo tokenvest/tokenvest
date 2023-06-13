@@ -1,5 +1,7 @@
 import Navbar from "../components/Navbar";
 import ConnectWallet from "../components/ConnectWallet";
+import Buy from "../components/Buy";
+
 const Marketplace = () => {
   return (
     <div className="display flex justify-center items-center">
@@ -35,7 +37,7 @@ const Marketplace = () => {
                 placeholder="Enter amount"
               />
             </div>
-            <ConnectWallet showAddress={false} />
+            <Buy />
           </div>
         </div>
       </div>
