@@ -1,12 +1,16 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { useAccount, useConnect, useSignMessage, useDisconnect } from 'wagmi';
+import { useAccount, useConnect, useSignMessage, useDisconnect } from "wagmi";
 
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import axios from 'axios';
-import { useAuth } from '../providers/auth.provider';
+import { InjectedConnector } from "wagmi/connectors/injected";
+import axios from "axios";
+import { useAuth } from "../providers/auth.provider";
 
-export default function ConnectWallet({ showAddress = false }: { showAddress: boolean }) {
+export default function ConnectWallet({
+  showAddress = false,
+}: {
+  showAddress: boolean;
+}) {
   const navigate = useNavigate();
   const { isAuthorized, user, signIn, signOut } = useAuth();
 
@@ -15,11 +19,14 @@ export default function ConnectWallet({ showAddress = false }: { showAddress: bo
   const { isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
 
-  const truncatedAddress = `${user?.address.slice(0, 6)}...${user?.address.slice(-4)}`;
+  const truncatedAddress = `${user?.address.slice(
+    0,
+    6
+  )}...${user?.address.slice(-4)}`;
 
   const handleDisconnect = async () => {
     if (isConnected) {
-      console.log('disconnecting');
+      console.log("disconnecting");
       disconnect();
     }
     signOut();
@@ -27,23 +34,23 @@ export default function ConnectWallet({ showAddress = false }: { showAddress: bo
 
   const handleAuth = async () => {
     if (isConnected) {
-      console.log('disconnecting');
+      console.log("disconnecting");
     }
 
     const { account, chain } = await connectAsync({
       connector: new InjectedConnector(),
     });
 
-    const userData = { address: account, chain: chain.id, network: 'evm' };
+    const userData = { address: account, chain: chain.id, network: "evm" };
 
     const { data } = await axios.post(
       `${import.meta.env.VITE_APP_SERVER_URL}/api/auth/request-message`,
       userData,
       {
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
         },
-      },
+      }
     );
     const message = data.message;
     const signature = await signMessageAsync({ message });
@@ -55,7 +62,7 @@ export default function ConnectWallet({ showAddress = false }: { showAddress: bo
           message,
           signature,
         },
-        { withCredentials: true },
+        { withCredentials: true }
       );
 
       signIn(data);
@@ -72,20 +79,25 @@ export default function ConnectWallet({ showAddress = false }: { showAddress: bo
         withCredentials: true,
       });
     } catch {
-      navigate('/register');
+      navigate("/register");
     }
   };
 
   //todo
-  const handleClick = isConnected || isAuthorized ? handleDisconnect : handleAuth;
+  const handleClick =
+    isConnected || isAuthorized ? handleDisconnect : handleAuth;
 
   return (
     <div>
       <button
-        className={`btn ${showAddress ? 'btn-neutral btn-sm' : 'btn-primary'}`}
+        className={`btn ${showAddress ? "btn-neutral btn-sm" : "btn-primary"}`}
         onClick={handleClick}
       >
-        {isAuthorized ? (showAddress ? truncatedAddress : 'Buy Now') : 'Connect'}
+        {isAuthorized
+          ? showAddress
+            ? truncatedAddress
+            : "Buy Now"
+          : "Connect"}
       </button>
     </div>
   );
