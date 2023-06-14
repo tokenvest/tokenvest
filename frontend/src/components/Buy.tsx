@@ -1,5 +1,6 @@
-import { ethers } from "ethers";
-
+import { useContractRead, configureChains } from "wagmi";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { sepolia } from "wagmi";
 import contractAbi from "../../contractAbi.json";
 import { useAuth } from "../providers/auth.provider";
 
@@ -254,16 +255,21 @@ const abi = [
 const Buy = () => {
   //import.meta.env.VITE_ALCHEMY_KEY
   const contractAddress = "0xBec200003Dde508c414F7Df07eCda6B5CC830666";
-  const provider = new ethers.AlchemyProvider("sepolia", "");
-  const contract = new ethers.Contract(contractAddress, abi, provider);
-
-  console.log(provider);
+  const EUR = "0x4aD01d867060ee783713A955fe9e557259d36c1e";
   const { user } = useAuth();
+
+  const { data: readData, isLoading: readLoading } = useContractRead({
+    address: "0xBec200003Dde508c414F7Df07eCda6B5CC830666",
+    abi: abi,
+    functionName: "TOKEN_PRICE",
+    account: "0x623bBF55Bf298CD13AE7Caf1f039Df3Bb729490c",
+    chainId: 11155111,
+  });
+  console.log(readData);
 
   const handleBuy = async () => {
     try {
-      const approve = await contract.TOKEN_PRICE();
-      console.log(price);
+      console.log("buying");
     } catch (err) {
       console.log(err);
     }

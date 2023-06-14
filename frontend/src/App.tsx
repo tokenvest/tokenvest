@@ -1,14 +1,15 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { createConfig, configureChains, mainnet, WagmiConfig } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
-import Landing from './pages/Landing';
-import Marketplace from './pages/Marketplace';
-import Register from './pages/Register';
-import { AuthProvider } from './providers/auth.provider';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createConfig, configureChains, WagmiConfig, sepolia } from "wagmi";
+
+import Landing from "./pages/Landing";
+import Marketplace from "./pages/Marketplace";
+import Register from "./pages/Register";
+import { AuthProvider } from "./providers/auth.provider";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const { publicClient, webSocketPublicClient } = configureChains(
-  [mainnet],
-  [publicProvider()],
+  [sepolia],
+  [alchemyProvider({ apiKey: import.meta.env.VITE_APP_ALCHEMI_KEY })]
 );
 
 const config = createConfig({
@@ -18,15 +19,15 @@ const config = createConfig({
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Landing />,
   },
   {
-    path: '/register',
+    path: "/register",
     element: <Register />,
   },
   {
-    path: '/Marketplace',
+    path: "/Marketplace",
     element: <Marketplace />,
   },
 ]);
