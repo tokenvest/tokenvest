@@ -5,7 +5,7 @@ import Buy from "../components/Buy";
 const Marketplace = () => {
   return (
     <div className="display flex justify-center items-center">
-      <Navbar lightText={false} />
+      <Navbar lightText={true} />
       <div className="card card-compact w-96  bg-gray-900 shadow-xl mt-20">
         <figure>
           <img src="/marketplace4.png" alt="Villa" />
@@ -29,14 +29,6 @@ const Marketplace = () => {
           ></progress>
           7000/10000 shares sold
           <div className="card-actions justify-end">
-            <div className="mr-4">
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white mt-2"
-                id="shares"
-                type="number"
-                placeholder="Enter amount"
-              />
-            </div>
             <Buy />
           </div>
         </div>

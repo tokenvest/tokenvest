@@ -1,8 +1,7 @@
-import { useContractRead, configureChains } from "wagmi";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { sepolia } from "wagmi";
-import contractAbi from "../../contractAbi.json";
+import { useContractRead } from "wagmi";
+import { useContractWrite } from "wagmi";
 import { useAuth } from "../providers/auth.provider";
+import { useState } from "react";
 
 const abi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -254,30 +253,51 @@ const abi = [
 
 const Buy = () => {
   //import.meta.env.VITE_ALCHEMY_KEY
-  const contractAddress = "0xBec200003Dde508c414F7Df07eCda6B5CC830666";
-  const EUR = "0x4aD01d867060ee783713A955fe9e557259d36c1e";
+  const contractAddress = "0xb59E731640D1aBd0Ad4c7D6252C6Ec3C6f214707";
+
+  const newEUR = "0x568835094f5A882B46b4ABa3930A49685e15545F";
   const { user } = useAuth();
 
-  const { data: readData, isLoading: readLoading } = useContractRead({
-    address: "0xBec200003Dde508c414F7Df07eCda6B5CC830666",
+  const [amount, setAmount] = useState(0);
+
+  const { data: tokenPrice, isLoading: loading } = useContractRead({
+    address: contractAddress,
     abi: abi,
     functionName: "TOKEN_PRICE",
-    account: "0x623bBF55Bf298CD13AE7Caf1f039Df3Bb729490c",
-    chainId: 11155111,
+    args: [],
   });
-  console.log(readData);
+
+  const { data, isLoading, isSuccess, write } = useContractWrite({
+    address: contractAddress,
+    abi: abi,
+    functionName: "safeMint",
+    args: [user.address, amount],
+  });
+
+  const handleAmount = (e: any) => {
+    e.preventDefault();
+    setAmount(e.target.value);
+  };
 
   const handleBuy = async () => {
     try {
-      console.log("buying");
+      write();
     } catch (err) {
       console.log(err);
     }
   };
 
   return (
-    <div>
-      <button className="btn" onClick={handleBuy}>
+    <div className="display flex justify-center items-center gap-2">
+      <input
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white mt-2"
+        id="shares"
+        type="number"
+        placeholder="Enter amount"
+        onChange={handleAmount}
+      />
+
+      <button className="btn btn-primary" onClick={handleBuy}>
         {" "}
         BUY
       </button>

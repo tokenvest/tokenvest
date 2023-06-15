@@ -16,7 +16,7 @@ export default function ConnectWallet({
 
   const { connectAsync } = useConnect();
   const { disconnect } = useDisconnect();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { signMessageAsync } = useSignMessage();
 
   const truncatedAddress = `${user?.address.slice(
