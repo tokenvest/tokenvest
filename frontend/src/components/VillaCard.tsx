@@ -252,26 +252,25 @@ const abi = [
   },
 ];
 
-const Buy = () => {
+const VillaCard = () => {
   //import.meta.env.VITE_ALCHEMY_KEY
-  const contractAddress = "0xb59E731640D1aBd0Ad4c7D6252C6Ec3C6f214707";
+  const contractAddress = "0xBDE44BdA52ba12314cA628DE5Fe95369552EdEe3";
 
   const newEUR = "0x568835094f5A882B46b4ABa3930A49685e15545F";
   const { user } = useAuth();
 
   const [amount, setAmount] = useState(0);
 
-  const { data: tokenPrice, isLoading: loading } = useContractRead({
+  const { data: paymentToken } = useContractRead({
     address: contractAddress,
     abi: abi,
-    functionName: "TOKEN_PRICE",
+    functionName: "paymentToken",
     args: [],
   });
 
-  tokenPrice &&
-    console.log(ethers.formatEther(tokenPrice as ethers.BigNumberish));
+  console.log(paymentToken);
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
+  const { write } = useContractWrite({
     address: contractAddress,
     abi: abi,
     functionName: "safeMint",
@@ -293,20 +292,47 @@ const Buy = () => {
 
   return (
     <div className="display flex justify-center items-center gap-2">
-      <input
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white mt-2"
-        id="shares"
-        type="number"
-        placeholder="Enter amount"
-        onChange={handleAmount}
-      />
-
-      <button className="btn btn-primary" onClick={handleBuy}>
-        {" "}
-        BUY
-      </button>
+      <div className="card card-compact w-96  bg-gray-900 shadow-xl mt-20">
+        <figure>
+          <img src="/marketplace4.png" alt="Villa" />
+        </figure>
+        <div className="card-body text-white">
+          <h2 className="card-title">
+            South Sky Villa
+            <div className="badge badge-primary">100€</div>
+          </h2>
+          <p>
+            South Sky Villa is a luxurious property offering panoramic views and
+            modern interiors. This desirable residence features spacious living
+            areas, a high-end kitchen, and private, comfortable bedrooms. Enjoy
+            the perfect blend of elegance, comfort, and natural beauty at South
+            Sky Villa.
+          </p>
+          <progress
+            className="progress progress-primary w-56 mt-5"
+            value="70"
+            max="100"
+          ></progress>
+          7000/10000 shares sold
+          <div className="card-actions justify-end">
+            <div className="flex justify-center gap-1 my-1">
+              <input
+                className="shadow appearance-none border rounded w-full  px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white "
+                id="shares"
+                type="number"
+                placeholder="Enter amount"
+                onChange={handleAmount}
+              />
+              <button className="btn btn-primary" onClick={handleBuy}>
+                {" "}
+                BUY
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Buy;
+export default VillaCard;
