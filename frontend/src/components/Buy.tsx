@@ -1,5 +1,6 @@
-import { useContractRead } from "wagmi";
-import { useContractWrite } from "wagmi";
+import { useContractRead, useContractWrite } from "wagmi";
+import { ethers } from "ethers";
+
 import { useAuth } from "../providers/auth.provider";
 import { useState } from "react";
 
@@ -266,6 +267,9 @@ const Buy = () => {
     functionName: "TOKEN_PRICE",
     args: [],
   });
+
+  tokenPrice &&
+    console.log(ethers.formatEther(tokenPrice as ethers.BigNumberish));
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
     address: contractAddress,

@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar";
 import { useAccount } from "wagmi";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Footer from "../components/Footer";
+import FAQ from "../components/FAQ";
 
 const Landing = () => {
   const { isConnected } = useAccount();
@@ -19,7 +21,7 @@ const Landing = () => {
   }, [isConnected]);
 
   return (
-    <div className="landingpage h-full bg-black pb-5">
+    <div className="landingpage h-full">
       <Navbar />
       <div className="carousel w-full">
         <div id="slide1" className="carousel-item relative w-full">
@@ -128,6 +130,8 @@ const Landing = () => {
           </div>
         </div>
       </div>
+      <FAQ />
+      <Footer />
     </div>
   );
 };
