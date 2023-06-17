@@ -1,5 +1,7 @@
 import ConnectWallet from "./ConnectWallet";
 import { useNavigate } from "react-router-dom";
+import BalanceProvider from "../providers/balance.provider";
+import { useContext } from "react";
 
 const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();

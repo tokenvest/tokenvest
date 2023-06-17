@@ -5,6 +5,7 @@ import Landing from "./pages/Landing";
 import Marketplace from "./pages/Marketplace";
 import Register from "./pages/Register";
 import { AuthProvider } from "./providers/auth.provider";
+import BalanceProvider from "./providers/balance.provider";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const { publicClient, webSocketPublicClient } = configureChains(
@@ -34,11 +35,13 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <WagmiConfig config={config}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </WagmiConfig>
+    <BalanceProvider>
+      <WagmiConfig config={config}>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </WagmiConfig>
+    </BalanceProvider>
   );
 }
 
