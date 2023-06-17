@@ -14,7 +14,7 @@ const BalanceProvider = ({ children }) => {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_SERVER_URL}/api/balance`
     );
-    console.log(response.data);
+    console.log("do something with response.data");
     setBalance(response.data);
     setLoading(false);
   };

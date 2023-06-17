@@ -43,7 +43,7 @@ export const balanceRoute: FastifyPluginCallback = (app, _, next) => {
           (token) => token.token_address === '0x47f917ee1b0be0d5fb51d45c0519882875fb3457',
         )[0];
         console.log('tusd balance', tUSDBalance.balance);
-        res.send(tUSDBalance);
+        return res.send(tUSDBalance);
       } catch (error) {
         console.log('error: ', error.message);
         return res.status(403).send(error.message);
