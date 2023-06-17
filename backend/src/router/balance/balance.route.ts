@@ -1,3 +1,4 @@
+import { error } from 'console';
 import { FastifyPluginCallback } from 'fastify';
 import Moralis from 'moralis';
 
@@ -14,10 +15,11 @@ export const balanceRoute: FastifyPluginCallback = (app, _, next) => {
     handler: async (req, res) => {
       try {
         const token = req.cookies.jwt;
+        console.log('cookie token: ', token);
 
-        if (!token) {
-          throw new Error();
-        }
+        // if (!token) {
+        //   throw new Error('No JWT token found in cookies.');
+        // }
 
         const data: Token = app.jwt.verify(token);
 
@@ -36,14 +38,15 @@ export const balanceRoute: FastifyPluginCallback = (app, _, next) => {
         //   symbol: balance.symbol,
         //   balance: balance.balance,
         // });
-        console.log();
+
         const tUSDBalance = response.raw.filter(
           (token) => token.token_address === '0x47f917ee1b0be0d5fb51d45c0519882875fb3457',
         )[0];
-        console.log(tUSDBalance.balance);
+        console.log('tusd balance', tUSDBalance.balance);
         res.send(tUSDBalance);
-      } catch {
-        return res.status(403).send();
+      } catch (error) {
+        console.log('error: ', error.message);
+        return res.status(403).send(error.message);
       }
     },
   });

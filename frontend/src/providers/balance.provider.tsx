@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
 const BalanceContext = createContext({
-  balance: [],
+  balance: "",
   loading: true,
 });
 
@@ -15,7 +15,7 @@ const BalanceProvider = ({ children }) => {
       `${import.meta.env.VITE_APP_SERVER_URL}/api/balance`
     );
     console.log(response.data);
-
+    setBalance(response.data);
     setLoading(false);
   };
 
