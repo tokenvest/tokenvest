@@ -2,19 +2,20 @@ import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
 const BalanceContext = createContext({
-  balance: 0,
+  balance: [],
   loading: true,
 });
 
 const BalanceProvider = ({ children }) => {
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState("");
   const [loading, setLoading] = useState(true);
 
   const getBalance = async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_SERVER_URL}/api/balance`
     );
-    setBalance(response);
+    console.log(response.data);
+
     setLoading(false);
   };
 
