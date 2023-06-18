@@ -1,12 +1,14 @@
 import ConnectWallet from "./ConnectWallet";
 import { useNavigate } from "react-router-dom";
-import BalanceProvider from "../providers/balance.provider";
+import { BalanceContext } from "../providers/balance.provider";
 import { useContext } from "react";
 
 const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();
   const textColorClass = lightText ? "text-white" : "text-black";
 
+  const { balance, loading } = useContext(BalanceContext);
+  console.log(balance.balance);
   return (
     <div
       className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass}`}

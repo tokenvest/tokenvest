@@ -15,11 +15,10 @@ export const balanceRoute: FastifyPluginCallback = (app, _, next) => {
     handler: async (req, res) => {
       try {
         const token = req.cookies.jwt;
-        console.log('cookie token: ', token);
 
-        // if (!token) {
-        //   throw new Error('No JWT token found in cookies.');
-        // }
+        if (!token) {
+          throw new Error('No JWT token found in cookies.');
+        }
 
         const data: Token = app.jwt.verify(token);
 
@@ -27,22 +26,12 @@ export const balanceRoute: FastifyPluginCallback = (app, _, next) => {
           chain: '0xaa36a7',
           address: data.address,
         });
-        // const balance = response.raw?.[0];
-        // console.log(balance);
-
-        // if (!balance || !balance.symbol) {
-        //   return res.status(400).send();
-        // }
-
-        // res.send({
-        //   symbol: balance.symbol,
-        //   balance: balance.balance,
-        // });
+        const tknBalances = response.result.map((tkn) => tkn.display());
 
         const tUSDBalance = response.raw.filter(
           (token) => token.token_address === '0x47f917ee1b0be0d5fb51d45c0519882875fb3457',
         )[0];
-        console.log('tusd balance', tUSDBalance.balance);
+
         return res.send(tUSDBalance);
       } catch (error) {
         console.log('error: ', error.message);

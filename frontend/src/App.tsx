@@ -35,13 +35,13 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <BalanceProvider>
-      <WagmiConfig config={config}>
-        <AuthProvider>
+    <WagmiConfig config={config}>
+      <AuthProvider>
+        <BalanceProvider>
           <RouterProvider router={router} />
-        </AuthProvider>
-      </WagmiConfig>
-    </BalanceProvider>
+        </BalanceProvider>
+      </AuthProvider>
+    </WagmiConfig>
   );
 }
 
