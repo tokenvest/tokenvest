@@ -2,13 +2,252 @@ import ConnectWallet from "./ConnectWallet";
 import { useNavigate } from "react-router-dom";
 import { BalanceContext } from "../providers/balance.provider";
 import { useContext } from "react";
+import { ethers } from "ethers";
+import { useContractRead, useContractWrite } from "wagmi";
+import { useAuth } from "../providers/auth.provider";
 
 const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();
   const textColorClass = lightText ? "text-white" : "text-black";
 
-  const { balance, loading } = useContext(BalanceContext);
-  console.log(balance.balance);
+  const { balance } = useContext(BalanceContext);
+
+  const testUSD = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
+  const tusdABI = [
+    { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "owner",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "value",
+          type: "uint256",
+        },
+      ],
+      name: "Approval",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "previousOwner",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "newOwner",
+          type: "address",
+        },
+      ],
+      name: "OwnershipTransferred",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "from",
+          type: "address",
+        },
+        { indexed: true, internalType: "address", name: "to", type: "address" },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "value",
+          type: "uint256",
+        },
+      ],
+      name: "Transfer",
+      type: "event",
+    },
+    {
+      inputs: [],
+      name: "MAX_SUPPLY",
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "MINT_AMOUNT",
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "owner", type: "address" },
+        { internalType: "address", name: "spender", type: "address" },
+      ],
+      name: "allowance",
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "spender", type: "address" },
+        { internalType: "uint256", name: "amount", type: "uint256" },
+      ],
+      name: "approve",
+      outputs: [{ internalType: "bool", name: "", type: "bool" }],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [{ internalType: "address", name: "account", type: "address" }],
+      name: "balanceOf",
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "decimals",
+      outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "spender", type: "address" },
+        { internalType: "uint256", name: "subtractedValue", type: "uint256" },
+      ],
+      name: "decreaseAllowance",
+      outputs: [{ internalType: "bool", name: "", type: "bool" }],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "spender", type: "address" },
+        { internalType: "uint256", name: "addedValue", type: "uint256" },
+      ],
+      name: "increaseAllowance",
+      outputs: [{ internalType: "bool", name: "", type: "bool" }],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "to", type: "address" },
+        { internalType: "uint256", name: "amount", type: "uint256" },
+      ],
+      name: "mint",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "name",
+      outputs: [{ internalType: "string", name: "", type: "string" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "owner",
+      outputs: [{ internalType: "address", name: "", type: "address" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "renounceOwnership",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "symbol",
+      outputs: [{ internalType: "string", name: "", type: "string" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "totalSupply",
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "to", type: "address" },
+        { internalType: "uint256", name: "amount", type: "uint256" },
+      ],
+      name: "transfer",
+      outputs: [{ internalType: "bool", name: "", type: "bool" }],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "from", type: "address" },
+        { internalType: "address", name: "to", type: "address" },
+        { internalType: "uint256", name: "amount", type: "uint256" },
+      ],
+      name: "transferFrom",
+      outputs: [{ internalType: "bool", name: "", type: "bool" }],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+      name: "transferOwnership",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+  ];
+  const { user } = useAuth();
+
+  const { data: readBalance } = useContractRead({
+    address: testUSD,
+    abi: tusdABI,
+    functionName: "balanceOf",
+    args: [user.address],
+  });
+
+  const { write } = useContractWrite({
+    address: testUSD,
+    abi: tusdABI,
+    functionName: "mint",
+    args: [user.address, 1000 * 10 ** 18],
+  });
+
+  const handleMint = async () => {
+    try {
+      console.log("the balance of this address ", readBalance);
+      write();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  balance.balance &&
+    console.log("show me balance", ethers.formatEther(balance.balance));
   return (
     <div
       className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass}`}
@@ -39,7 +278,7 @@ const Navbar = ({ lightText = true }) => {
               <a>Marketplace</a>
             </li>
 
-            <li>
+            <li onClick={() => navigate("/dashboard")}>
               <a>Dashboard</a>
             </li>
           </ul>
@@ -57,11 +296,23 @@ const Navbar = ({ lightText = true }) => {
             <a>Marketplace</a>
           </li>
 
-          <li>
+          <li onClick={() => navigate("/dashboard")}>
             <a>Dashboard</a>
           </li>
         </ul>
       </div>
+      <button
+        onClick={() => handleMint()}
+        className="btn btn-sm btn-ghost p-0 text-xs animate-pulse"
+      >
+        {" "}
+        mint
+      </button>
+      <p className=" text-xs mx-3">
+        Balance: $
+        {balance.balance &&
+          parseFloat(ethers.formatEther(balance.balance)).toFixed(2)}
+      </p>
       <div className="navbar-end">
         <ConnectWallet showAddress={true} />
       </div>

@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import { useAuth } from "../providers/auth.provider";
 import { useState } from "react";
 
-const abi = [
+const abiContract = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
     anonymous: false,
@@ -256,7 +256,6 @@ const VillaCard = () => {
   //import.meta.env.VITE_ALCHEMY_KEY
   const contractAddress = "0x275767F80F7A2734710f46d8080eE2F9aB781Ec5";
 
-  const newEUR = "0x568835094f5A882B46b4ABa3930A49685e15545F";
   const testUSD = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
   const { user } = useAuth();
 
@@ -264,7 +263,7 @@ const VillaCard = () => {
 
   const { data: paymentToken } = useContractRead({
     address: contractAddress,
-    abi: abi,
+    abi: abiContract,
     functionName: "paymentToken",
     args: [],
   });
@@ -273,7 +272,7 @@ const VillaCard = () => {
 
   const { write } = useContractWrite({
     address: contractAddress,
-    abi: abi,
+    abi: abiContract,
     functionName: "safeMint",
     args: [user.address, amount],
   });

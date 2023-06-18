@@ -6,6 +6,7 @@ export const BalanceContext = createContext({
     balance: 0,
   },
   loading: true,
+  write: () => {},
 });
 
 const BalanceProvider = ({ children }) => {
@@ -19,11 +20,9 @@ const BalanceProvider = ({ children }) => {
         withCredentials: true,
       }
     );
-
     setBalance(response.data);
     setLoading(false);
   };
-
   useEffect(() => {
     getBalance();
   }, []);
