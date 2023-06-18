@@ -228,7 +228,7 @@ const Navbar = ({ lightText = true }) => {
     abi: tusdABI,
     functionName: "balanceOf",
     args: [user.address],
-  });
+  }) as any;
 
   const { write } = useContractWrite({
     address: testUSD,
@@ -246,8 +246,10 @@ const Navbar = ({ lightText = true }) => {
     }
   };
 
-  balance.balance &&
-    console.log("show me balance", ethers.formatEther(balance.balance));
+  balance.tUSDBalance &&
+    console.log("hum", ethers.formatEther(balance.tUSDBalance));
+  balance.tUSDBalance &&
+    console.log("hum", ethers.formatEther(balance.tUSDBalance));
   return (
     <div
       className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass}`}
@@ -310,8 +312,7 @@ const Navbar = ({ lightText = true }) => {
       </button>
       <p className=" text-xs mx-3">
         Balance: $
-        {balance.balance &&
-          parseFloat(ethers.formatEther(balance.balance)).toFixed(2)}
+        {readBalance && parseFloat(ethers.formatEther(readBalance)).toFixed(2)}
       </p>
       <div className="navbar-end">
         <ConnectWallet showAddress={true} />
