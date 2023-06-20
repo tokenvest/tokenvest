@@ -1,13 +1,19 @@
 import ConnectWallet from "./ConnectWallet";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { BalanceContext } from "../providers/balance.provider";
 import { useContext } from "react";
 import { ethers } from "ethers";
-import { useContractRead, useContractWrite } from "wagmi";
+import { useContractRead, useContractWrite, useAccount } from "wagmi";
 import { useAuth } from "../providers/auth.provider";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+
+import { getNetwork } from "@wagmi/core";
+import { switchNetwork } from "@wagmi/core";
 
 const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();
+  const { isConnected } = useAccount();
   const textColorClass = lightText ? "text-white" : "text-black";
 
   const { balance } = useContext(BalanceContext);
@@ -223,6 +229,24 @@ const Navbar = ({ lightText = true }) => {
   ];
   const { user } = useAuth();
 
+  const [chain, setChain] = useState<any>(null);
+
+  useEffect(() => {
+    const getChain = async () => {
+      const chain = getNetwork();
+      setChain(chain);
+    };
+    getChain();
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (isConnected && chain?.id !== 11155111) {
+      switchNetwork({
+        chainId: 11155111,
+      });
+    }
+  }, [isConnected]);
+
   const { data: readBalance } = useContractRead({
     address: testUSD,
     abi: tusdABI,
@@ -250,6 +274,7 @@ const Navbar = ({ lightText = true }) => {
     console.log("hum", ethers.formatEther(balance.tUSDBalance));
   balance.tUSDBalance &&
     console.log("hum", ethers.formatEther(balance.tUSDBalance));
+
   return (
     <div
       className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass}`}
