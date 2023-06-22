@@ -17,7 +17,7 @@ export default function ConnectWallet({
 
   const { connectAsync } = useConnect();
   const { disconnect } = useDisconnect();
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
 
   const truncatedAddress = `${user?.address.slice(
@@ -38,7 +38,6 @@ export default function ConnectWallet({
       connector: new InjectedConnector(),
     });
 
-    console.log("connecting with chain", chain.id);
     if (chain.id !== 11155111) {
       console.log("switching network");
       await switchNetwork({

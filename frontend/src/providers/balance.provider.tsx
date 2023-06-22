@@ -8,8 +8,12 @@ type BalanceProviderProps = {
 
 export const BalanceContext = createContext({
   balance: {
-    tUSDBalance: 0,
-    nativeBalance: 0,
+    tUSDBalance: {
+      balance: 0,
+    },
+    nativeBalance: {
+      balance: 0,
+    },
   },
   loading: true,
 });
@@ -26,16 +30,13 @@ const BalanceProvider = ({ children }: BalanceProviderProps) => {
         withCredentials: true,
       }
     );
-    console.log(response.data.nativeBalance.balance);
-    setBalance({
-      tUSDBalance: response.data.tUSDBalance.balance,
-      nativeBalance: response.data.nativeBalance.balance,
-    });
+    const balance = response.data;
+    setBalance(balance);
     setLoading(false);
   };
   useEffect(() => {
     getBalance();
-  }, [isConnected]);
+  }, [isConnected, balance]);
 
   return (
     <BalanceContext.Provider value={{ balance, loading }}>

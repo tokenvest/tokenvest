@@ -1,10 +1,9 @@
 import ConnectWallet from "./ConnectWallet";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { BalanceContext } from "../providers/balance.provider";
 import { useContext } from "react";
 import { ethers } from "ethers";
-import { useContractRead, useContractWrite, useAccount } from "wagmi";
+import { useContractWrite, useAccount } from "wagmi";
 import { useAuth } from "../providers/auth.provider";
 
 const Navbar = ({ lightText = true }) => {
@@ -13,7 +12,7 @@ const Navbar = ({ lightText = true }) => {
   const textColorClass = lightText ? "text-white" : "text-black";
 
   const { balance } = useContext(BalanceContext);
-
+  console.log("balance in the navbar", balance);
   const testUSD = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
   const tusdABI = [
     { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -225,31 +224,6 @@ const Navbar = ({ lightText = true }) => {
   ];
   const { user } = useAuth();
 
-  //const [chain, setChain] = useState<any>(null);
-
-  // useEffect(() => {
-  //   const getChain = async () => {
-  //     const chain = getNetwork();
-  //     setChain(chain);
-  //   };
-  //   getChain();
-  // }, [isConnected]);
-
-  // useEffect(() => {
-  //   if (isConnected && chain?.id !== 11155111) {
-  //     switchNetwork({
-  //       chainId: 11155111,
-  //     });
-  //   }
-  // }, [isConnected]);
-
-  const { data: readBalance } = useContractRead({
-    address: testUSD,
-    abi: tusdABI,
-    functionName: "balanceOf",
-    args: [user.address],
-  }) as any;
-
   const { write } = useContractWrite({
     address: testUSD,
     abi: tusdABI,
@@ -259,7 +233,6 @@ const Navbar = ({ lightText = true }) => {
 
   const handleMint = async () => {
     try {
-      console.log("the balance of this address ", readBalance);
       write();
     } catch (err) {
       console.log(err);
@@ -328,7 +301,10 @@ const Navbar = ({ lightText = true }) => {
       </button>
       <p className=" text-xs mx-3">
         Balance: $
-        {readBalance && parseFloat(ethers.formatEther(readBalance)).toFixed(2)}
+        {balance.tUSDBalance &&
+          parseFloat(ethers.formatEther(balance.tUSDBalance.balance)).toFixed(
+            2
+          )}
       </p>
       <div className="navbar-end">
         <ConnectWallet showAddress={true} />
