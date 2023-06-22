@@ -6,10 +6,6 @@ import { useContext } from "react";
 import { ethers } from "ethers";
 import { useContractRead, useContractWrite, useAccount } from "wagmi";
 import { useAuth } from "../providers/auth.provider";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-
-import { getNetwork } from "@wagmi/core";
-import { switchNetwork } from "@wagmi/core";
 
 const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();
@@ -229,23 +225,23 @@ const Navbar = ({ lightText = true }) => {
   ];
   const { user } = useAuth();
 
-  const [chain, setChain] = useState<any>(null);
+  //const [chain, setChain] = useState<any>(null);
 
-  useEffect(() => {
-    const getChain = async () => {
-      const chain = getNetwork();
-      setChain(chain);
-    };
-    getChain();
-  }, [isConnected]);
+  // useEffect(() => {
+  //   const getChain = async () => {
+  //     const chain = getNetwork();
+  //     setChain(chain);
+  //   };
+  //   getChain();
+  // }, [isConnected]);
 
-  useEffect(() => {
-    if (isConnected && chain?.id !== 11155111) {
-      switchNetwork({
-        chainId: 11155111,
-      });
-    }
-  }, [isConnected]);
+  // useEffect(() => {
+  //   if (isConnected && chain?.id !== 11155111) {
+  //     switchNetwork({
+  //       chainId: 11155111,
+  //     });
+  //   }
+  // }, [isConnected]);
 
   const { data: readBalance } = useContractRead({
     address: testUSD,
@@ -269,11 +265,6 @@ const Navbar = ({ lightText = true }) => {
       console.log(err);
     }
   };
-
-  balance.tUSDBalance &&
-    console.log("hum", ethers.formatEther(balance.tUSDBalance));
-  balance.tUSDBalance &&
-    console.log("hum", ethers.formatEther(balance.tUSDBalance));
 
   return (
     <div

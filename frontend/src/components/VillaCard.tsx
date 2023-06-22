@@ -291,8 +291,8 @@ const VillaCard = () => {
   };
 
   return (
-    <div className="display flex justify-center items-center gap-2">
-      <div className="card card-compact w-96  bg-gray-900 shadow-xl mt-20">
+    <div className="display flex justify-center items-center gap-2 mt-20">
+      <div className="card card-compact w-96  bg-gray-900 shadow-xl ">
         <figure>
           <img src="/marketplace4.png" alt="Villa" />
         </figure>

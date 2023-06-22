@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import FAQ from "../components/FAQ";
+import VillaCard from "../components/VillaCard";
 
 const Landing = () => {
   const { isConnected } = useAccount();
@@ -89,46 +90,10 @@ const Landing = () => {
         </div>
       </div>
       <div className="m-5">
-        <p className=" text-white w-full display flex justify-center items-center font-bold text-3xl">
+        <h1 className=" text-white w-full display flex justify-center items-center font-bold text-3xl">
           Top Properties
-        </p>
-        <div className="card card-compact w-96 bg-gray-900  shadow-xl m-5">
-          <figure>
-            <img src="/marketplace4.png" alt="Villa" />
-          </figure>
-          <div className="card-body text-white">
-            <h2 className="card-title">
-              South Sky Villa
-              <div className="badge badge-primary">100€</div>
-            </h2>
-            <p>
-              South Sky Villa is a luxurious property offering panoramic views
-              and modern interiors. This desirable residence features spacious
-              living areas, a high-end kitchen, and private, comfortable
-              bedrooms. Enjoy the perfect blend of elegance, comfort, and
-              natural beauty at South Sky Villa.
-            </p>
-            <progress
-              className="progress progress-primary w-56 mt-5"
-              value="70"
-              max="100"
-            ></progress>
-            7000/10000 shares sold
-            <div className="card-actions justify-end">
-              <div className="mr-4">
-                {isConnected && (
-                  <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white mt-2"
-                    id="shares"
-                    type="number"
-                    placeholder="(max: 3000) "
-                  />
-                )}
-              </div>
-              <ConnectWallet showAddress={false} />
-            </div>
-          </div>
-        </div>
+        </h1>
+        <VillaCard />
       </div>
       <FAQ />
       <Footer />

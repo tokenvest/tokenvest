@@ -5,6 +5,7 @@ import { useAccount, useConnect, useSignMessage, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import axios from "axios";
 import { useAuth } from "../providers/auth.provider";
+import { switchNetwork } from "@wagmi/core";
 
 export default function ConnectWallet({
   showAddress = false,
@@ -33,13 +34,17 @@ export default function ConnectWallet({
   };
 
   const handleAuth = async () => {
-    if (isConnected) {
-      console.log("disconnecting");
-    }
-
     const { account, chain } = await connectAsync({
       connector: new InjectedConnector(),
     });
+
+    console.log("connecting with chain", chain.id);
+    if (chain.id !== 11155111) {
+      console.log("switching network");
+      await switchNetwork({
+        chainId: 11155111,
+      });
+    }
 
     const userData = { address: account, chain: chain.id, network: "evm" };
 
