@@ -300,7 +300,7 @@ const VillaCard = () => {
             South Sky Villa
             <div className="badge badge-primary">100€</div>
           </h2>
-          <p>
+          <p className="xs:text-xs sm:text-sm md:text-base ">
             South Sky Villa is a luxurious property offering panoramic views and
             modern interiors. This desirable residence features spacious living
             areas, a high-end kitchen, and private, comfortable bedrooms. Enjoy

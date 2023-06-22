@@ -47,7 +47,7 @@ const Landing = () => {
         <div id="slide2" className="carousel-item relative w-full">
           <img src="/img7crop.jpg" className="w-full" />
           <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center text-xs sm:text-sm md:text-lg lg:text-2xl xl:text-3xl 2xl:text-3xl">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center text-base  sm:text-lg lg:text-2xl xl:text-3xl 2xl:text-3xl">
             Blockchain meets real estate: Invest globally, effortlessly.
           </div>
           <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
