@@ -6,6 +6,15 @@ type BalanceProviderProps = {
   children: ReactNode;
 };
 
+type BalanceProps = {
+  tUSDBalance: {
+    balance: number;
+  };
+  nativeBalance: {
+    balance: number;
+  };
+};
+
 export const BalanceContext = createContext({
   balance: {
     tUSDBalance: {
@@ -19,7 +28,14 @@ export const BalanceContext = createContext({
 });
 
 const BalanceProvider = ({ children }: BalanceProviderProps) => {
-  const [balance, setBalance] = useState({ tUSDBalance: 0, nativeBalance: 0 });
+  const [balance, setBalance] = useState<BalanceProps>({
+    tUSDBalance: {
+      balance: 0,
+    },
+    nativeBalance: {
+      balance: 0,
+    },
+  });
   const [loading, setLoading] = useState(true);
   const { isConnected } = useAccount();
 
@@ -31,12 +47,14 @@ const BalanceProvider = ({ children }: BalanceProviderProps) => {
       }
     );
     const balance = response.data;
+    console.log("balance balanceprovider", balance);
     setBalance(balance);
     setLoading(false);
   };
+
   useEffect(() => {
     getBalance();
-  }, [isConnected, balance]);
+  }, [isConnected, loading]);
 
   return (
     <BalanceContext.Provider value={{ balance, loading }}>

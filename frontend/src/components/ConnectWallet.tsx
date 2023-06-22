@@ -27,7 +27,6 @@ export default function ConnectWallet({
 
   const handleDisconnect = async () => {
     if (isConnected) {
-      console.log("disconnecting");
       disconnect();
     }
     signOut();
