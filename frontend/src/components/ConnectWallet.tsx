@@ -20,6 +20,8 @@ export default function ConnectWallet({
   const { isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
 
+  console.log("connectionbutton isconnected ?", isConnected);
+
   const truncatedAddress = `${user?.address.slice(
     0,
     6
@@ -96,11 +98,7 @@ export default function ConnectWallet({
         className={`btn ${showAddress ? "btn-neutral btn-sm" : "btn-primary"}`}
         onClick={handleClick}
       >
-        {isAuthorized
-          ? showAddress
-            ? truncatedAddress
-            : "Buy Now"
-          : "Connect"}
+        {user.address && isConnected ? truncatedAddress : "Connect"}
       </button>
     </div>
   );

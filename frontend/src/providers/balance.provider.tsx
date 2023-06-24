@@ -47,6 +47,7 @@ export const BalanceContext = createContext({
     ],
   },
   loading: true,
+  getBalance: () => {},
 });
 
 const BalanceProvider = ({ children }: BalanceProviderProps) => {
@@ -57,10 +58,20 @@ const BalanceProvider = ({ children }: BalanceProviderProps) => {
     nativeBalance: {
       balance: 0,
     },
-    nfts: [],
+    tokenVestNFT: [
+      {
+        tokenAddress: "",
+        tokenId: "",
+        metadata: {
+          name: "",
+          description: "",
+          image: "",
+        },
+      },
+    ],
   });
   const [loading, setLoading] = useState(true);
-  const { isConnected } = useAccount();
+  const { isConnected, isReconnecting, status, isConnecting } = useAccount();
 
   const getBalance = async () => {
     const response = await axios.get(
@@ -73,14 +84,17 @@ const BalanceProvider = ({ children }: BalanceProviderProps) => {
     console.log("balance balanceprovider", balance);
     setBalance(balance);
     setLoading(false);
+    return balance;
   };
 
   useEffect(() => {
-    getBalance();
-  }, [balance]);
+    if (isConnected) {
+      getBalance();
+    }
+  }, [isConnected, isConnecting, isReconnecting, status]);
 
   return (
-    <BalanceContext.Provider value={{ balance, loading }}>
+    <BalanceContext.Provider value={{ balance, loading, getBalance }}>
       {children}
     </BalanceContext.Provider>
   );
