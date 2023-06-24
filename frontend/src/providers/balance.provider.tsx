@@ -13,6 +13,17 @@ type BalanceProps = {
   nativeBalance: {
     balance: number;
   };
+  tokenVestNFT: [
+    {
+      tokenAddress: string;
+      tokenId: string;
+      metadata: {
+        name: string;
+        description: string;
+        image: string;
+      };
+    }
+  ];
 };
 
 export const BalanceContext = createContext({
@@ -23,6 +34,17 @@ export const BalanceContext = createContext({
     nativeBalance: {
       balance: 0,
     },
+    tokenVestNFT: [
+      {
+        tokenAddress: "",
+        tokenId: "",
+        metadata: {
+          name: "",
+          description: "",
+          image: "",
+        },
+      },
+    ],
   },
   loading: true,
 });
@@ -35,6 +57,7 @@ const BalanceProvider = ({ children }: BalanceProviderProps) => {
     nativeBalance: {
       balance: 0,
     },
+    nfts: [],
   });
   const [loading, setLoading] = useState(true);
   const { isConnected } = useAccount();
@@ -54,7 +77,7 @@ const BalanceProvider = ({ children }: BalanceProviderProps) => {
 
   useEffect(() => {
     getBalance();
-  }, [isConnected, loading]);
+  }, [balance]);
 
   return (
     <BalanceContext.Provider value={{ balance, loading }}>

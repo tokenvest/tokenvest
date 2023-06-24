@@ -301,12 +301,10 @@ const Navbar = ({ lightText = true }) => {
       </button>
       <p className=" text-xs mx-3">
         Balance: $
-        {isConnected
-          ? balance.tUSDBalance &&
-            parseFloat(ethers.formatEther(balance.tUSDBalance.balance)).toFixed(
-              2
-            )
-          : "0.00"}
+        {balance.tUSDBalance &&
+          parseFloat(ethers.formatEther(balance.tUSDBalance.balance)).toFixed(
+            2
+          )}
       </p>
       <div className="navbar-end">
         <ConnectWallet showAddress={true} />

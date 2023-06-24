@@ -41,8 +41,9 @@ export const balanceRoute: FastifyPluginCallback = (app, _, next) => {
           chain: '0xaa36a7',
           address: data.address,
         });
-        console.log('nfts: ', nfts.result);
-        res.send({ tUSDBalance, nativeBalance, nfts });
+        const tokenVestNFT = nfts.result;
+
+        res.send({ tUSDBalance, nativeBalance, tokenVestNFT });
       } catch (error) {
         console.log('error: ', error.message);
         return res.status(403).send(error.message);
