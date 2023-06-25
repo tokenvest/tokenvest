@@ -20,7 +20,7 @@ const VillaCard = () => {
     args: [],
   });
 
-  console.log("show me the money ", paymentToken.data);
+  console.log("show me the payment token ", paymentToken.data);
 
   const { write } = useContractWrite({
     address: contractAddress,

@@ -20,8 +20,6 @@ export default function ConnectWallet({
   const { isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
 
-  console.log("connectionbutton isconnected ?", isConnected);
-
   const truncatedAddress = `${user?.address.slice(
     0,
     6
