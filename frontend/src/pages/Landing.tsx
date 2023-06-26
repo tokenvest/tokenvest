@@ -1,7 +1,4 @@
 import Navbar from "../components/Navbar";
-import { useAccount } from "wagmi";
-import axios from "axios";
-import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import FAQ from "../components/FAQ";
 import VillaCard from "../components/VillaCard";

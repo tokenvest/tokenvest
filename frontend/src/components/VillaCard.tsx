@@ -3,6 +3,8 @@ import { useContractRead, useContractWrite } from "wagmi";
 import { useAuth } from "../providers/auth.provider";
 import { useState } from "react";
 import abiContract from "../abis/abiContract.json";
+import { ethers, toNumber } from "ethers";
+import axios from "axios";
 
 const VillaCard = () => {
   //import.meta.env.VITE_ALCHEMY_KEY
@@ -13,14 +15,26 @@ const VillaCard = () => {
 
   const [amount, setAmount] = useState(0);
 
-  const paymentToken = useContractRead({
+  const price = useContractRead({
     address: contractAddress,
     abi: abiContract,
-    functionName: "paymentToken",
+    functionName: "TOKEN_PRICE",
     args: [],
   });
 
-  console.log("show me the payment token ", paymentToken.data);
+  const maxSupply = useContractRead({
+    address: contractAddress,
+    abi: abiContract,
+    functionName: "MAX_SUPPLY",
+    args: [],
+  });
+
+  const balanceOf = useContractRead({
+    address: contractAddress,
+    abi: abiContract,
+    functionName: "balanceOf",
+    args: [user.address],
+  });
 
   const { write } = useContractWrite({
     address: contractAddress,
@@ -51,7 +65,10 @@ const VillaCard = () => {
         <div className="card-body text-white">
           <h2 className="card-title">
             South Sky Villa
-            <div className="badge badge-primary">100€</div>
+            <div className="badge badge-primary">
+              {price.isSuccess &&
+                "$" + ethers.formatEther(price.data as string)}
+            </div>
           </h2>
           <p className="xs:text-xs sm:text-sm md:text-base ">
             South Sky Villa is a luxurious property offering panoramic views and
@@ -62,10 +79,13 @@ const VillaCard = () => {
           </p>
           <progress
             className="progress progress-primary w-56 mt-5"
-            value="70"
-            max="100"
+            value={balanceOf.isSuccess ? toNumber(balanceOf.data as number) : 0}
+            max={maxSupply.isSuccess ? toNumber(maxSupply.data as number) : 0}
           ></progress>
-          7000/10000 shares sold
+          {toNumber(balanceOf.data as number) +
+            "/" +
+            toNumber(maxSupply.data as number)}{" "}
+          Sold
           <div className="card-actions justify-end">
             <div className="flex justify-center gap-1 my-1">
               <input
