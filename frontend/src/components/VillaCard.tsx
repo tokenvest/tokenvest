@@ -7,12 +7,8 @@ import { ethers, toNumber } from "ethers";
 import axios from "axios";
 
 const VillaCard = () => {
-  //import.meta.env.VITE_ALCHEMY_KEY
   const contractAddress = "0x275767F80F7A2734710f46d8080eE2F9aB781Ec5";
-  const testUSD = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
-
   const { user } = useAuth();
-
   const [amount, setAmount] = useState(0);
 
   const price = useContractRead({
@@ -79,12 +75,24 @@ const VillaCard = () => {
           </p>
           <progress
             className="progress progress-primary w-56 mt-5"
-            value={balanceOf.isSuccess ? toNumber(balanceOf.data as number) : 0}
-            max={maxSupply.isSuccess ? toNumber(maxSupply.data as number) : 0}
+            value={
+              balanceOf.isSuccess && balanceOf.data
+                ? toNumber(balanceOf.data as number)
+                : 0
+            }
+            max={
+              maxSupply.isSuccess && maxSupply.data
+                ? toNumber(maxSupply.data as number)
+                : 0
+            }
           ></progress>
-          {toNumber(balanceOf.data as number) +
-            "/" +
-            toNumber(maxSupply.data as number)}{" "}
+          {balanceOf.isSuccess && balanceOf.data
+            ? toNumber(balanceOf.data as number)
+            : 0}
+          /
+          {balanceOf.isSuccess && balanceOf.data
+            ? toNumber(maxSupply.data as number)
+            : 0}{" "}
           Sold
           <div className="card-actions justify-end">
             <div className="flex justify-center gap-1 my-1">

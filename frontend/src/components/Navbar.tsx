@@ -1,22 +1,21 @@
 import ConnectWallet from "./ConnectWallet";
 import { useNavigate } from "react-router-dom";
-import { BalanceContext } from "../providers/balance.provider";
-import { useContext } from "react";
-import { ethers } from "ethers";
-import { useContractWrite, useAccount } from "wagmi";
+import { useContractWrite, useAccount, useBalance } from "wagmi";
 import { useAuth } from "../providers/auth.provider";
-import { useEffect } from "react";
+
 import abiPaymentToken from "../abis/abiPaymentToken.json";
 
 const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const textColorClass = lightText ? "text-white" : "text-black";
-
-  const { balance, getBalance } = useContext(BalanceContext);
 
   const testUSD = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
 
+  const { data: tUSDbalance } = useBalance({
+    address: address,
+    token: testUSD,
+  });
   const { user } = useAuth();
 
   const { write } = useContractWrite({
@@ -26,14 +25,9 @@ const Navbar = ({ lightText = true }) => {
     args: [user.address, 1000 * 10 ** 18],
   });
 
-  useEffect(() => {
-    getBalance();
-  }, []);
-
   const handleMint = async () => {
     try {
       write();
-      getBalance();
     } catch (err) {
       console.log(err);
     }
@@ -101,10 +95,7 @@ const Navbar = ({ lightText = true }) => {
       </button>
       <p className=" text-xs mx-3">
         Balance: $
-        {balance.tUSDBalance &&
-          parseFloat(ethers.formatEther(balance.tUSDBalance.balance)).toFixed(
-            2
-          )}
+        {isConnected && parseFloat(tUSDbalance?.formatted as string).toFixed(2)}
       </p>
       <div className="navbar-end">
         <ConnectWallet showAddress={true} />
