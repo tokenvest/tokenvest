@@ -1,7 +1,7 @@
 import { useContractRead, useContractWrite } from "wagmi";
 
 import { useAuth } from "../providers/auth.provider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import abiContract from "../abis/abiContract.json";
 import { ethers, toNumber } from "ethers";
 import axios from "axios";
@@ -10,6 +10,25 @@ const VillaCard = () => {
   const contractAddress = "0x275767F80F7A2734710f46d8080eE2F9aB781Ec5";
   const { user } = useAuth();
   const [amount, setAmount] = useState(0);
+
+  const tokenURI = useContractRead({
+    address: contractAddress,
+    abi: abiContract,
+    functionName: "tokenURI",
+    args: [0],
+  });
+
+  console.log("tokenuri 0 is  : ", tokenURI.data);
+  //tokenURI.data =ipfs://QmfR5DzK9UMWBWBrPYxpZheSSiPd2jksoy5iZLv26m5tSD
+  useEffect(() => {
+    const fetchData = async () => {
+      const ipfsHash = (tokenURI.data as string).replace("ipfs://", "");
+      const gatewayUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
+      const result = await axios.get(gatewayUrl);
+      console.log("result of fetching ipfs : ", result.data);
+    };
+    fetchData();
+  }, [tokenURI.data]);
 
   const price = useContractRead({
     address: contractAddress,
