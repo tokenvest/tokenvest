@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import Navbar from "../components/Navbar";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface FormState {
   name: string;
@@ -12,9 +12,9 @@ interface FormState {
 }
 
 const initialFormState: FormState = {
-  name: '',
-  surname: '',
-  address: '',
+  name: "",
+  surname: "",
+  address: "",
   facePic: null,
   idPic: null,
 };
@@ -34,7 +34,7 @@ const Register: React.FC = () => {
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: 'facePic' | 'idPic',
+    type: "facePic" | "idPic"
   ) => {
     setFormState({
       ...formState,
@@ -51,23 +51,23 @@ const Register: React.FC = () => {
         formState,
         {
           headers: {
-            'content-type': 'application/json',
+            "content-type": "application/json",
           },
           withCredentials: true,
-        },
+        }
       );
     } catch {
-      navigate('/');
+      navigate("/");
     }
   };
 
   return (
     <div>
-      <Navbar lightText={false} />
-      <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
+      <Navbar />
+      <div className="min-h-screen flex flex-col justify-center sm:py-12">
         <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
           <h1 className="font-bold text-center text-2xl mb-5">Register</h1>
-          <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
+          <div className=" card card-compact w-96  bg-gray-900 shadow-xl ">
             <div className="px-5 py-7">
               <form onSubmit={handleSubmit}>
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
@@ -78,7 +78,7 @@ const Register: React.FC = () => {
                   name="name"
                   value={formState.name}
                   onChange={handleInputChange}
-                  className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  className="input input-bordered w-full max-w-xs mb-5"
                   required
                 />
 
@@ -90,7 +90,7 @@ const Register: React.FC = () => {
                   name="surname"
                   value={formState.surname}
                   onChange={handleInputChange}
-                  className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  className="input input-bordered w-full max-w-xs mb-5"
                   required
                 />
 
@@ -102,7 +102,7 @@ const Register: React.FC = () => {
                   name="address"
                   value={formState.address}
                   onChange={handleInputChange}
-                  className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  className="input input-bordered w-full max-w-xs mb-5"
                   required
                 />
 
@@ -112,36 +112,25 @@ const Register: React.FC = () => {
                 <input
                   type="file"
                   name="facePic"
-                  onChange={(e) => handleFileChange(e, 'facePic')}
-                  className="border rounded-lg px-3 py-2 mt-1 mb-5 
-                block w-full text-sm text-slate-500
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-violet-50 file:text-violet-700
-                hover:file:bg-violet-100"
+                  onChange={(e) => handleFileChange(e, "facePic")}
+                  className="file-input w-full max-w-xs "
                   required
                 />
 
-                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                <label className="font-semibold text-sm text-gray-600 pb-1 block mt-5">
                   Picture of your ID *
                 </label>
                 <input
                   type="file"
                   name="idPic"
-                  onChange={(e) => handleFileChange(e, 'idPic')}
-                  className="border rounded-lg px-3 py-2 mt-1 mb-5 block w-full text-sm text-slate-500
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-violet-50 file:text-violet-700
-                hover:file:bg-violet-100"
+                  onChange={(e) => handleFileChange(e, "idPic")}
+                  className="file-input w-full max-w-xs "
                   required
                 />
 
                 <button
                   type="submit"
-                  className="transition duration-200 bg-blue-500 hover:bg-blue-600 rounded-lg text-white w-full py-2"
+                  className="btn btn-primary w-full py-3 rounded-full font-semibold text-sm mt-5"
                 >
                   Submit
                 </button>
