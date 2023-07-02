@@ -1,4 +1,4 @@
-# TokenVest by ShitCoinShacks
+# TokenVest
 
 ## Smart Contracts
 
