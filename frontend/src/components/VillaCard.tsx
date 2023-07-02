@@ -19,6 +19,8 @@ const VillaCard = () => {
     description: "",
   });
   const [isAllowed, setIsAllowed] = useState(false);
+  const [refreshBalance, setRefreshBalance] = useState(false);
+  const [tokenBalance, setTokenBalance] = useState<BigNumberish>(0);
 
   const tokenURI = useContractRead({
     address: contractAddress,
@@ -90,13 +92,6 @@ const VillaCard = () => {
     args: [],
   });
 
-  const balanceOf = useContractRead({
-    address: contractAddress,
-    abi: abiContract,
-    functionName: "balanceOf",
-    args: [user.address],
-  });
-
   const { write } = useContractWrite({
     address: contractAddress,
     abi: abiContract,
@@ -104,28 +99,36 @@ const VillaCard = () => {
     args: [user.address, amount],
   });
 
+  const balanceOf = useContractRead({
+    address: contractAddress,
+    abi: abiContract,
+    functionName: "balanceOf",
+    args: [user.address],
+    watch: true,
+  });
+
+  useEffect(() => {
+    balanceOf.isSuccess &&
+      balanceOf.data &&
+      setTokenBalance(balanceOf.data as BigNumberish);
+  }, [refreshBalance, balanceOf.isSuccess, balanceOf.data]);
+
   const handleAmount = (e: any) => {
     e.preventDefault();
     setAmount(e.target.value);
   };
 
-  const handleApprove = async () => {
-    try {
-      const { write } = useContractWrite({
-        address: paymentToken,
-        abi: abiPaymenbtToken,
-        functionName: "approve",
-        args: [contractAddress, ethers.MaxUint256],
-      });
-      write();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const { write: approve, isSuccess: approveSuccess } = useContractWrite({
+    address: paymentToken,
+    abi: abiPaymenbtToken,
+    functionName: "approve",
+    args: [contractAddress, ethers.MaxUint256],
+  });
 
   const handleBuy = async () => {
     try {
       write();
+      setRefreshBalance((prev) => !prev);
     } catch (err) {
       console.log(err);
     }
@@ -150,22 +153,15 @@ const VillaCard = () => {
           </p>
           <progress
             className="progress progress-primary w-56 mt-5"
-            value={
-              balanceOf.isSuccess && balanceOf.data
-                ? toNumber(balanceOf.data as number)
-                : 0
-            }
+            value={toNumber(tokenBalance as number)}
             max={
               maxSupply.isSuccess && maxSupply.data
                 ? toNumber(maxSupply.data as number)
                 : 0
             }
           ></progress>
-          {balanceOf.isSuccess && balanceOf.data
-            ? toNumber(balanceOf.data as number)
-            : 0}
-          /
-          {balanceOf.isSuccess && balanceOf.data
+          {toNumber(tokenBalance as number)}/
+          {maxSupply.isSuccess && maxSupply.data
             ? toNumber(maxSupply.data as number)
             : 0}{" "}
           Sold
@@ -190,7 +186,7 @@ const VillaCard = () => {
                   BUY
                 </button>
               ) : (
-                <button className="btn btn-primary " onClick={handleApprove}>
+                <button className="btn btn-primary " onClick={() => approve()}>
                   {" "}
                   Approve
                 </button>
