@@ -1,4 +1,6 @@
-# TokenVest by ShitCoinShacks
+# VestedLands
+
+This Dapp use the standart ERC 1155 to tokenize real estate assets. By combining the power of blockchain technology and smart contracts, this project aims to revolutionize the traditional real estate industry by introducing greater liquidity, accessibility, and efficiency.
 
 ## Smart Contracts
 
