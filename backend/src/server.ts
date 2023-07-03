@@ -15,10 +15,9 @@ const initServer = async (opts?: FastifyServerOptions) => {
   await establishDatabaseConnection();
 
   app.register(cors, {
-    origin: import.meta.env.VITE_MORALIS_REACT_URL,
+    origin: true, //import.meta.env.VITE_MORALIS_REACT_URL,
     credentials: true,
   });
-
 
   app.register(jwt, {
     secret: import.meta.env.VITE_JWT_SECRET,

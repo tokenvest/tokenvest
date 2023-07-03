@@ -118,7 +118,7 @@ const VillaCard = () => {
     setAmount(e.target.value);
   };
 
-  const { write: approve, isSuccess: approveSuccess } = useContractWrite({
+  const { write: approve } = useContractWrite({
     address: paymentToken,
     abi: abiPaymenbtToken,
     functionName: "approve",
