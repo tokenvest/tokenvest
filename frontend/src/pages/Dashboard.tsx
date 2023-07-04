@@ -35,7 +35,7 @@ const Dashboard = () => {
   return (
     <div>
       <Navbar />
-      <div className="m-5">
+      <div className="m-5 font-Gotham">
         <h1 className="mt-20 text-2xl"> Dashboard </h1>
         <ul>
           <li>Your wallet address: {isConnected && address}</li>
@@ -46,7 +46,7 @@ const Dashboard = () => {
             ETH
           </li>
           <li>
-            Your USDC ballance:
+            Your USDC ballance:{" "}
             {isConnected &&
               "$" + parseFloat(tUSDbalance?.formatted as string).toFixed(2)}
           </li>

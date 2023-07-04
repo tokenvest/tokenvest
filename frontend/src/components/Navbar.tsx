@@ -54,7 +54,7 @@ const Navbar = ({ lightText = true }) => {
 
   return (
     <div
-      className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass}`}
+      className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass} font-Roboto tracking-widest`}
     >
       <div className="navbar-start">
         <div className="dropdown">
@@ -79,11 +79,11 @@ const Navbar = ({ lightText = true }) => {
             className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-500 rounded-box w-52"
           >
             <li onClick={() => navigate("/Marketplace")}>
-              <a>Marketplace</a>
+              <a>MARKETPLACE</a>
             </li>
 
             <li onClick={() => navigate("/dashboard")}>
-              <a>Dashboard</a>
+              <a>DASHBOARD</a>
             </li>
           </ul>
         </div>
@@ -91,17 +91,17 @@ const Navbar = ({ lightText = true }) => {
           className="btn btn-ghost normal-case font-bold text-xl"
           onClick={() => navigate("/")}
         >
-          TokenVest
+          TOKENVEST
         </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 ">
           <li onClick={() => navigate("/Marketplace")}>
-            <a>Marketplace</a>
+            <a>MARKETPLACE</a>
           </li>
 
           <li onClick={() => navigate("/dashboard")}>
-            <a>Dashboard</a>
+            <a>DASHBOARD</a>
           </li>
         </ul>
       </div>
@@ -110,10 +110,10 @@ const Navbar = ({ lightText = true }) => {
         className="btn btn-sm btn-ghost p-0 text-xs animate-pulse"
       >
         {" "}
-        mint
+        MINT
       </button>
       <p className=" text-xs mx-3">
-        Balance: ${isConnected && (userBalance as string)}
+        BALANCE: ${isConnected && (userBalance as string)}
       </p>
       <div className="navbar-end">
         <ConnectWallet showAddress={true} />

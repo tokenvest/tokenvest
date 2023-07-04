@@ -3,7 +3,7 @@ import VillaCard from "../components/VillaCard";
 
 const Marketplace = () => {
   return (
-    <div className="display flex justify-center items-center">
+    <div className="display flex justify-center items-center font-Gotham">
       <Navbar lightText={true} />
       <VillaCard />
     </div>

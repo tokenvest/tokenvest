@@ -20,7 +20,7 @@ const Landing = () => {
   // }, [isConnected]);
 
   return (
-    <div className="landingpage h-full">
+    <div className="landingpage h-full font-Gotham">
       <Navbar />
       <div className="carousel w-full">
         <div id="slide1" className="carousel-item relative w-full">
