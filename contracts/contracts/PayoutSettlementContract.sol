@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
+import "contracts/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "contracts/node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "./Token.sol";
 
 error PayoutSettlementContract__NFTdoesNotExist();

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts@4.9.1/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts@4.9.1/access/Ownable.sol";
-import "@openzeppelin/contracts@4.9.1/utils/Counters.sol";
-import "@openzeppelin/contracts@4.9.1/token/ERC20/IERC20.sol";
+import "contracts/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "contracts/node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "contracts/node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "contracts/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract TokenVest is ERC721, Ownable {
     using Counters for Counters.Counter;
