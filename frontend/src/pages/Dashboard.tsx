@@ -83,23 +83,54 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="display flex justify-center items-center gap-2 mt-20">
-        <div className="card card-compact w-72  bg-gray-900 shadow-xl ">
-          <figure>
-            <img src="./public/marketplace4.png" alt="Villa" />
-          </figure>
-          <div className="card-body text-white ">
-            <h2 className="card-title flex justify-center items-center">
-              South Sky Villa
-              <div className="badge  badge-success text-lg">
-                x{" "}
-                {isConnected &&
-                  readContractBalanceOf.isSuccess &&
-                  (readContractBalanceOf.data as string).toString()}
-              </div>
-            </h2>
+      <div className="flex justify-center gap-10">
+        <div className="display flex justify-center items-center gap-2 mt-20">
+          <div className="card card-compact w-72  bg-gray-900 shadow-xl ">
+            <figure>
+              <img src="./public/marketplace4.png" alt="Villa" />
+            </figure>
+            <div className="card-body text-white ">
+              <h2 className="card-title flex justify-center items-center">
+                South Sky Villa
+                <div className="badge  badge-success text-lg">
+                  x{" "}
+                  {isConnected &&
+                    readContractBalanceOf.isSuccess &&
+                    (readContractBalanceOf.data as string).toString()}
+                </div>
+              </h2>
+              <button className="btn btn-sm btn-success">claim</button>
+            </div>
+          </div>
+        </div>
 
-            <button className="btn btn-sm btn-success">claim</button>
+        <div className="display flex justify-center items-center gap-2 mt-20">
+          <div className="card card-compact w-72  bg-gray-900 shadow-xl ">
+            <figure>
+              <img src="./public/GardenVillaSquare.jpg" alt="Villa" />
+            </figure>
+            <div className="card-body text-white ">
+              <h2 className="card-title flex justify-center items-center">
+                Garden Villa
+                <div className="badge  badge-success text-lg">x 3</div>
+              </h2>
+              <button className="btn btn-sm btn-success">claim</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="display flex justify-center items-center gap-2 mt-20">
+          <div className="card card-compact w-72  bg-gray-900 shadow-xl ">
+            <figure>
+              <img src="./public/SkyVillaSquare.jpg" alt="Villa" />
+            </figure>
+            <div className="card-body text-white ">
+              <h2 className="card-title flex justify-center items-center">
+                Sky Villa
+                <div className="badge  badge-success text-lg">x 7</div>
+              </h2>
+              <button className="btn btn-sm btn-success">claim</button>
+            </div>
           </div>
         </div>
       </div>
