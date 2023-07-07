@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./KYC.sol";
 
+error Token__CanOnlyBeCalledByApprovedCaller();
+
 abstract contract Token is ERC1155, KYC {
     IERC20 public stableCoinAddress;
 
@@ -14,12 +16,22 @@ abstract contract Token is ERC1155, KYC {
 
     event AppartmentMinted(uint256 id, uint256 totalSupply);
 
+    address public approvedCaller; //the multisig contract address
+
+    modifier onlyApprovedCaller() {
+        if (msg.sender != approvedCaller)
+            revert Token__CanOnlyBeCalledByApprovedCaller();
+        _;
+    }
+
     constructor(
         string memory _uri,
         address _signerAddress,
         address[] memory _owners,
-        address _stableCoinAddress
+        address _stableCoinAddress,
+        address _approvedCaller
     ) ERC1155(_uri) KYC(_signerAddress, _owners) {
+        approvedCaller = _approvedCaller;
         stableCoinAddress = IERC20(_stableCoinAddress);
     }
 
@@ -27,11 +39,11 @@ abstract contract Token is ERC1155, KYC {
         return totalSupply[id];
     }
 
-    function _mintToken(
+    function mintToken(
         address to,
         uint256 id,
         uint256 _initialSupply
-    ) internal {
+    ) external onlyApprovedCaller {
         _mint(to, id, _initialSupply, "");
         totalSupply[id] = _initialSupply;
 

@@ -5,6 +5,8 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IToken.sol";
 
+error Listings__CanOnlyBeCalledByApprovedCaller();
+
 contract Listings {
     struct Listing {
         address seller;
@@ -19,17 +21,30 @@ contract Listings {
 
     event ListingChanged(address indexed seller, uint256 indexed index);
 
+    address public approvedCaller; //the multisig contract address
+
+    modifier onlyApprovedCaller() {
+        if (msg.sender != approvedCaller)
+            revert Listings__CanOnlyBeCalledByApprovedCaller();
+        _;
+    }
+
+    constructor(address multisigAddress) {
+        approvedCaller = multisigAddress;
+    }
+
     function cost(uint256 index, uint256 units) public view returns (uint256) {
         Listing storage listing = listings[index];
         return units * listing.unitPrice;
     }
 
+    //in this version since secondary market trading is not allowed yet: only the approved caller can list tokens
     function list(
         IToken token,
         uint256 id,
         uint256 units,
         uint256 unitPrice
-    ) public {
+    ) public onlyApprovedCaller {
         require(
             token.isApprovedForAll(msg.sender, address(this)),
             "not approved"
@@ -70,7 +85,14 @@ contract Listings {
 
         uint256 totalCost = (units * listing.unitPrice);
 
-        require(listing.token.stableCoinAddress().transferFrom(msg.sender, listing.seller, totalCost), "transfer failed.");
+        require(
+            listing.token.stableCoinAddress().transferFrom(
+                msg.sender,
+                listing.seller,
+                totalCost
+            ),
+            "transfer failed."
+        );
 
         emit ListingChanged(listing.seller, index);
     }
