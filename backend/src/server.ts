@@ -15,10 +15,9 @@ const initServer = async (opts?: FastifyServerOptions) => {
   await establishDatabaseConnection();
 
   app.register(cors, {
-    origin: import.meta.env.VITE_MORALIS_REACT_URL,
+    origin: true, //import.meta.env.VITE_MORALIS_REACT_URL,
     credentials: true,
   });
-
 
   app.register(jwt, {
     secret: import.meta.env.VITE_JWT_SECRET,
@@ -38,7 +37,8 @@ const initServer = async (opts?: FastifyServerOptions) => {
 
   if (import.meta.env.PROD) {
     try {
-      const PORT = 6543;
+      console.log('env prod: ', import.meta.env.PROD);
+      const PORT = 8080;
       app.listen({ port: PORT });
       console.log('Listening on port:', PORT);
     } catch (e) {

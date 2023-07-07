@@ -2,19 +2,25 @@ import { useContractRead, useContractWrite } from "wagmi";
 import { useAuth } from "../providers/auth.provider";
 import { useState, useEffect } from "react";
 import abiContract from "../abis/abiContract.json";
-import { ethers, toNumber } from "ethers";
+import abiPaymenbtToken from "../abis/abiPaymentToken.json";
+import { BigNumberish, ethers, toNumber } from "ethers";
 import axios from "axios";
 
 const VillaCard = () => {
   const contractAddress = "0x275767F80F7A2734710f46d8080eE2F9aB781Ec5";
+  const paymentToken = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
   const { user } = useAuth();
   const [amount, setAmount] = useState(0);
+  const [requiredAmount, setRequiredAmount] = useState(BigInt(0));
   const [imgUrl, setImgUrl] = useState("");
   const [metaData, setMetaData] = useState({
     name: "",
     image: "",
     description: "",
   });
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [refreshBalance, setRefreshBalance] = useState(false);
+  const [tokenBalance, setTokenBalance] = useState<BigNumberish>(0);
 
   const tokenURI = useContractRead({
     address: contractAddress,
@@ -23,7 +29,36 @@ const VillaCard = () => {
     args: [0],
   });
 
-  console.log("tokenuri 0 is  : ", tokenURI.data);
+  const usdAllowance = useContractRead({
+    address: paymentToken,
+    abi: abiPaymenbtToken,
+    functionName: "allowance",
+    args: [user?.address, contractAddress],
+  });
+
+  const usdBalance = useContractRead({
+    address: paymentToken,
+    abi: abiPaymenbtToken,
+    functionName: "balanceOf",
+    args: [user?.address],
+  });
+
+  useEffect(() => {
+    if (usdAllowance.data) {
+      const allowance = usdAllowance.data as bigint;
+      console.log("allowance: ", allowance);
+      const requiredAmount =
+        BigInt(amount.toString()) * BigInt((price.data as bigint) || "0");
+      console.log("requiredAmount: ", requiredAmount);
+      setRequiredAmount(requiredAmount);
+      if (allowance >= requiredAmount && amount > 0) {
+        setIsAllowed(true);
+      } else {
+        setIsAllowed(false);
+      }
+    }
+  }, [usdAllowance.data, amount]);
+
   //tokenURI.data =ipfs://QmfR5DzK9UMWBWBrPYxpZheSSiPd2jksoy5iZLv26m5tSD
   useEffect(() => {
     const fetchData = async () => {
@@ -57,13 +92,6 @@ const VillaCard = () => {
     args: [],
   });
 
-  const balanceOf = useContractRead({
-    address: contractAddress,
-    abi: abiContract,
-    functionName: "balanceOf",
-    args: [user.address],
-  });
-
   const { write } = useContractWrite({
     address: contractAddress,
     abi: abiContract,
@@ -71,14 +99,36 @@ const VillaCard = () => {
     args: [user.address, amount],
   });
 
+  const balanceOf = useContractRead({
+    address: contractAddress,
+    abi: abiContract,
+    functionName: "balanceOf",
+    args: [user.address],
+    watch: true,
+  });
+
+  useEffect(() => {
+    balanceOf.isSuccess &&
+      balanceOf.data &&
+      setTokenBalance(balanceOf.data as BigNumberish);
+  }, [refreshBalance, balanceOf.isSuccess, balanceOf.data]);
+
   const handleAmount = (e: any) => {
     e.preventDefault();
     setAmount(e.target.value);
   };
 
+  const { write: approve } = useContractWrite({
+    address: paymentToken,
+    abi: abiPaymenbtToken,
+    functionName: "approve",
+    args: [contractAddress, ethers.MaxUint256],
+  });
+
   const handleBuy = async () => {
     try {
       write();
+      setRefreshBalance((prev) => !prev);
     } catch (err) {
       console.log(err);
     }
@@ -103,22 +153,15 @@ const VillaCard = () => {
           </p>
           <progress
             className="progress progress-primary w-56 mt-5"
-            value={
-              balanceOf.isSuccess && balanceOf.data
-                ? toNumber(balanceOf.data as number)
-                : 0
-            }
+            value={toNumber(tokenBalance as number)}
             max={
               maxSupply.isSuccess && maxSupply.data
                 ? toNumber(maxSupply.data as number)
                 : 0
             }
           ></progress>
-          {balanceOf.isSuccess && balanceOf.data
-            ? toNumber(balanceOf.data as number)
-            : 0}
-          /
-          {balanceOf.isSuccess && balanceOf.data
+          {toNumber(tokenBalance as number)}/
+          {maxSupply.isSuccess && maxSupply.data
             ? toNumber(maxSupply.data as number)
             : 0}{" "}
           Sold
@@ -131,10 +174,23 @@ const VillaCard = () => {
                 placeholder="Enter amount"
                 onChange={handleAmount}
               />
-              <button className="btn btn-primary" onClick={handleBuy}>
-                {" "}
-                BUY
-              </button>
+              {isAllowed || amount == 0 ? (
+                <button
+                  className="btn btn-primary "
+                  disabled={
+                    (usdBalance.data as bigint) > requiredAmount ? false : true
+                  }
+                  onClick={handleBuy}
+                >
+                  {" "}
+                  BUY
+                </button>
+              ) : (
+                <button className="btn btn-primary " onClick={() => approve()}>
+                  {" "}
+                  Approve
+                </button>
+              )}
             </div>
           </div>
         </div>

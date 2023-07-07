@@ -1,7 +1,14 @@
 import ConnectWallet from "./ConnectWallet";
 import { useNavigate } from "react-router-dom";
-import { useContractWrite, useAccount, useBalance } from "wagmi";
+import {
+  useContractWrite,
+  useAccount,
+  useBalance,
+  useWaitForTransaction,
+} from "wagmi";
 import { useAuth } from "../providers/auth.provider";
+import { useState, useEffect } from "react";
+import { BigNumberish } from "ethers";
 
 import abiPaymentToken from "../abis/abiPaymentToken.json";
 
@@ -9,21 +16,33 @@ const Navbar = ({ lightText = true }) => {
   const navigate = useNavigate();
   const { isConnected, address } = useAccount();
   const textColorClass = lightText ? "text-white" : "text-black";
+  const [userBalance, setUserBalance] = useState<BigNumberish>(0);
 
   const testUSD = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
 
   const { data: tUSDbalance } = useBalance({
     address: address,
     token: testUSD,
+    watch: isConnected,
   });
   const { user } = useAuth();
 
-  const { write } = useContractWrite({
+  const { write, data } = useContractWrite({
     address: testUSD,
     abi: abiPaymentToken,
     functionName: "mint",
     args: [user.address, 1000 * 10 ** 18],
   });
+
+  const { isSuccess, data: hashData } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
+  useEffect(() => {
+    const balance = parseFloat(tUSDbalance?.formatted as string).toFixed(2);
+    setUserBalance(balance);
+  }),
+    [isSuccess, tUSDbalance, hashData];
 
   const handleMint = async () => {
     try {
@@ -35,7 +54,7 @@ const Navbar = ({ lightText = true }) => {
 
   return (
     <div
-      className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass}`}
+      className={`navbar bg-transparent shadow-md fixed top-0 w-full z-50 ${textColorClass} font-Roboto tracking-widest`}
     >
       <div className="navbar-start">
         <div className="dropdown">
@@ -60,11 +79,11 @@ const Navbar = ({ lightText = true }) => {
             className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-500 rounded-box w-52"
           >
             <li onClick={() => navigate("/Marketplace")}>
-              <a>Marketplace</a>
+              <a>MARKETPLACE</a>
             </li>
 
             <li onClick={() => navigate("/dashboard")}>
-              <a>Dashboard</a>
+              <a>DASHBOARD</a>
             </li>
           </ul>
         </div>
@@ -72,17 +91,17 @@ const Navbar = ({ lightText = true }) => {
           className="btn btn-ghost normal-case font-bold text-xl"
           onClick={() => navigate("/")}
         >
-          TokenVest
+          TOKENVEST
         </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 ">
           <li onClick={() => navigate("/Marketplace")}>
-            <a>Marketplace</a>
+            <a>MARKETPLACE</a>
           </li>
 
           <li onClick={() => navigate("/dashboard")}>
-            <a>Dashboard</a>
+            <a>DASHBOARD</a>
           </li>
         </ul>
       </div>
@@ -91,11 +110,10 @@ const Navbar = ({ lightText = true }) => {
         className="btn btn-sm btn-ghost p-0 text-xs animate-pulse"
       >
         {" "}
-        mint
+        MINT
       </button>
       <p className=" text-xs mx-3">
-        Balance: $
-        {isConnected && parseFloat(tUSDbalance?.formatted as string).toFixed(2)}
+        BALANCE: ${isConnected && (userBalance as string)}
       </p>
       <div className="navbar-end">
         <ConnectWallet showAddress={true} />
