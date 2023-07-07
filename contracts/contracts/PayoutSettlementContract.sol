@@ -28,10 +28,12 @@ contract PayoutSettlementContract is IERC1155Receiver {
         token = Token(_buildingNFTaddress);
     }
 
+    //set the NFT as sold which allows the users to withdraw their payout
+    //can only be set if the contract is also funded with the total claimable payout in this transaction
     function setNFTasSold(uint256 id) external {
         if (token.getTotalSupply(id) == 0)
             revert PayoutSettlementContract__NFTdoesNotExist();
-        uint requiredFundsToDistribute = token.getPayoutPerTokenAtSale(id) *
+        uint requiredFundsToDistribute = payoutPerToken[id] *
             token.getTotalSupply(id);
         bool success = token.stableCoinAddress().transferFrom(
             msg.sender,
@@ -51,6 +53,8 @@ contract PayoutSettlementContract is IERC1155Receiver {
         if (balance == 0)
             revert PayoutSettlementContract__UserDoesNotHaveABalance();
         bytes memory emptyData;
+
+        //transfer the NFT balance from the user to this contract
         token.safeTransferFrom(
             msg.sender,
             address(this),
@@ -59,7 +63,8 @@ contract PayoutSettlementContract is IERC1155Receiver {
             emptyData
         );
 
-        uint256 amount = (balance * token.getPayoutPerTokenAtSale(id));
+        //transfer the stablecoin payout to the user
+        uint256 amount = balance * payoutPerToken[id];
         token.stableCoinAddress().transfer(msg.sender, amount);
     }
 

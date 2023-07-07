@@ -23,7 +23,7 @@ abstract contract Token is ERC1155, KYC {
         stableCoinAddress = IERC20(_stableCoinAddress);
     }
 
-    function getTotalSupply(uint256 id) public view returns (uint256) {
+    function getTotalSupply(uint256 id) external view returns (uint256) {
         return totalSupply[id];
     }
 
