@@ -7,6 +7,9 @@ error Multisig__ThisOwnerAlreadyApproved();
 error Multisig__AlreadyAnOwner();
 error Multisig__OnlyOwnersCanCall();
 error Multisig__NotAnOwner();
+error Multisig__TransactionWasNotApprovedByThisUser();
+error Multisig__TransactionDoesNotExist();
+error Multisig__TransactionAlreadyExecuted();
 
 contract MultiSig {
     uint256 public min_approvals;
@@ -18,9 +21,27 @@ contract MultiSig {
         bytes data; //the calldata: includes the function signature and the function arguments
         uint approvalCount;
         mapping(address => bool) approvals;
+        bool executed;
     }
 
     Transaction[] public transactions;
+
+    modifier transactionExists(uint transactionIndex) {
+        if (transactionIndex >= transactions.length)
+            revert Multisig__TransactionDoesNotExist();
+        _;
+    }
+
+    modifier notExecuted(uint transactionIndex) {
+        if (transactions[transactionIndex].executed)
+            revert Multisig__TransactionAlreadyExecuted();
+        _;
+    }
+
+    modifier onlyOwners() {
+        if (!owners[msg.sender]) revert Multisig__OnlyOwnersCanCall();
+        _;
+    }
 
     constructor(address[5] memory _owners, uint256 _min_approvals) {
         for (uint i = 0; i < _owners.length; i++) {
@@ -45,7 +66,14 @@ contract MultiSig {
         transaction.approvalCount = 0;
     }
 
-    function approveTransaction(uint _transactionIndex) public onlyOwners {
+    function approveTransaction(
+        uint _transactionIndex
+    )
+        public
+        onlyOwners
+        transactionExists(_transactionIndex)
+        notExecuted(_transactionIndex)
+    {
         Transaction storage transaction = transactions[_transactionIndex];
 
         if (transaction.approvals[msg.sender])
@@ -56,14 +84,25 @@ contract MultiSig {
 
         if (transaction.approvalCount >= min_approvals) {
             // If enough approvals have been collected, execute the transaction
+            transaction.executed = true;
             (bool success, ) = transaction.target.call(transaction.data);
             require(success, "Transaction execution failed.");
         }
     }
 
-    modifier onlyOwners() {
-        if (!owners[msg.sender]) revert Multisig__OnlyOwnersCanCall();
-        _;
+    function revokeApproval(
+        uint _transactionIndex
+    )
+        public
+        onlyOwners
+        transactionExists(_transactionIndex)
+        notExecuted(_transactionIndex)
+    {
+        Transaction storage transaction = transactions[_transactionIndex];
+        if (!transaction.approvals[msg.sender])
+            revert Multisig__TransactionWasNotApprovedByThisUser();
+        transaction.approvals[msg.sender] = false;
+        transaction.approvalCount--;
     }
 
     //function should also be proposed by proposeTransaction
