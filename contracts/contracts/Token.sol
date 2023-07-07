@@ -11,25 +11,15 @@ abstract contract Token is ERC1155, KYC {
     IERC20 public stableCoinAddress;
 
     mapping(uint256 => uint256) totalSupply;
-    mapping(uint256 => uint256) initialPricePerToken;
-    mapping(uint256 => uint256) payoutPerTokenAtSale;
 
-    event AppartmentMinted(
-        uint256 id,
-        uint256 initialPricePerToken,
-        uint256 initialYieldPerToken,
-        uint256 totalSupply
-    );
+    event AppartmentMinted(uint256 id, uint256 totalSupply);
 
     constructor(
         string memory _uri,
         address _signerAddress,
         address[] memory _owners,
         address _stableCoinAddress
-    )
-        ERC1155(_uri)
-        KYC(_signerAddress, _owners)
-    {
+    ) ERC1155(_uri) KYC(_signerAddress, _owners) {
         stableCoinAddress = IERC20(_stableCoinAddress);
     }
 
@@ -37,35 +27,15 @@ abstract contract Token is ERC1155, KYC {
         return totalSupply[id];
     }
 
-    function getInitialPricePerToken(uint256 id) public view returns (uint256) {
-        return initialPricePerToken[id];
-    }
-
-    function getPayoutPerTokenAtSale(uint256 id) public view returns (uint256) {
-        return payoutPerTokenAtSale[id];
-    }
-
     function _mintToken(
         address to,
         uint256 id,
-        uint256 _initialSupply,
-        uint256 _initialPricePerToken,
-        uint256 _yieldAtSale
+        uint256 _initialSupply
     ) internal {
         _mint(to, id, _initialSupply, "");
         totalSupply[id] = _initialSupply;
-        initialPricePerToken[id] = _initialPricePerToken;
 
-        payoutPerTokenAtSale[id] =
-            (_initialPricePerToken * (1e18 + _yieldAtSale)) /
-            1e18;
-
-        emit AppartmentMinted(
-            id,
-            _initialPricePerToken,
-            _yieldAtSale,
-            _initialSupply
-        );
+        emit AppartmentMinted(id, _initialSupply);
     }
 
     function safeTransferFrom(

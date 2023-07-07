@@ -14,6 +14,7 @@ error PayoutSettlementContract__PayoutsNotClaimableYet();
 contract PayoutSettlementContract is IERC1155Receiver {
     //mapping nft id to boolean flag. payout should be organised per property
     mapping(uint256 => bool) payoutAllowedToBeClaimed;
+    mapping(uint256 => uint256) payoutPerToken;
 
     Token token;
 

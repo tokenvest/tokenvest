@@ -12,11 +12,12 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "chai": "^4.3.7",
+    "dotenv": "^16.0.0",
     "hardhat": "^2.15.0",
     "hardhat-contract-sizer": "^2.8.0",
     "hardhat-deploy": "^0.11.22",
     "hardhat-gas-reporter": "^1.0.8",
-    "dotenv": "^16.0.0"
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.1",
