@@ -97,7 +97,7 @@ export const authRoute: FastifyPluginCallback = (app, _, next) => {
     handler: async (req, res) => {
       try {
         res.clearCookie('jwt');
-        return res.status(200).send();
+        return res.status(200).send('Logged out');
       } catch {
         return res.status(403).send();
       }

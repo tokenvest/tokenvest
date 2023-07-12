@@ -38,9 +38,9 @@ const initServer = async (opts?: FastifyServerOptions) => {
   if (import.meta.env.PROD) {
     try {
       console.log('env prod: ', import.meta.env.PROD);
-      const PORT = 8080;
-      app.listen({ port: PORT });
-      console.log('Listening on port:', PORT);
+
+      app.listen({ port: import.meta.env.VITE_PORT });
+      console.log('Listening on port:', import.meta.env.VITE_PORT);
     } catch (e) {
       console.error(e);
       process.exit(1);
