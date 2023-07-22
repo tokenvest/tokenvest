@@ -13,11 +13,10 @@ const Home: NextPage = () => {
           content="Tokenized real estate investments on the blockchain"
           name="description"
         />
-        <link href="/favicon.ico" rel="icon" />
+        <link href="/logov2.png" rel="icon" type="image/svg+xml" />
       </Head>
 
       <main>
-        <ConnectButton />
         <Navbar />
 
         <h1 className="text-5xl text-red-600">this is a test</h1>

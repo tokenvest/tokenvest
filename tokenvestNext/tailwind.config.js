@@ -9,7 +9,12 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        Roboto: ["Roboto", "sans-serif"],
+        Gotham: ["Gotham", "sans-serif"],
+      },
+    },
   },
   plugins: [require("daisyui")],
 };
