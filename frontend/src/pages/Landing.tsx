@@ -4,21 +4,6 @@ import FAQ from "../components/FAQ";
 import VillaCard from "../components/VillaCard";
 
 const Landing = () => {
-  // const { isConnected } = useAccount();
-  // const [balance, setBalance] = useState(0);
-
-  // useEffect(() => {
-  //   if (isConnected) {
-  //     axios
-  //       .get(`${import.meta.env.VITE_APP_SERVER_URL}/api/balance`, {
-  //         withCredentials: true,
-  //       })
-  //       .then(({ data }) => {
-  //         setBalance(Number(Number(data.balance * 10 ** -18).toFixed(2)) / 100);
-  //       });
-  //   }
-  // }, [isConnected]);
-
   return (
     <div className="landingpage h-full font-Gotham">
       <Navbar />

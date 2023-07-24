@@ -16,7 +16,7 @@ const Navbar = () => {
   const [userBalance, setUserBalance] = useState<string>("...");
   const testUSD = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
 
-  const { data: tUSDbalance } = useBalance({
+  const { data: tUSDbalance, isSuccess: succeed } = useBalance({
     address: address,
     token: testUSD,
     watch: isConnected,
@@ -34,7 +34,9 @@ const Navbar = () => {
   });
 
   useEffect(() => {
-    const balance = parseFloat(tUSDbalance?.formatted as string).toFixed(2);
+    const balance = succeed
+      ? parseFloat(tUSDbalance?.formatted as string).toFixed(2)
+      : " ...";
     setUserBalance(balance);
   }, [isSuccess, tUSDbalance, hashData]);
 
@@ -47,7 +49,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar bg-transparent shadow-md fixed top-0 w-full z-50  font-Roboto tracking-widest">
+    <div className="navbar bg-transparent shadow-md fixed top-0 w-full z-50 text-white font-Roboto tracking-widest">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -87,7 +89,7 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 ">
           <li>
-            <Link href={"/Marketplace"}>MARKETPLACE</Link>
+            <Link href={"/marketplace"}>MARKETPLACE</Link>
           </li>
 
           <li>
@@ -104,7 +106,7 @@ const Navbar = () => {
         MINT
       </button>
       <p className=" text-xs mx-3">
-        BALANCE: ${isConnected ? (userBalance as string) : "..."}
+        BALANCE: ${isConnected && userBalance ? (userBalance as string) : "..."}
       </p>
       <div className="navbar-end mr-10">
         <ConnectButton />

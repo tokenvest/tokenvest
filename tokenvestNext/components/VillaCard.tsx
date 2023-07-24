@@ -8,6 +8,7 @@ import axios from "axios";
 
 const VillaCard = () => {
   const { address } = useAccount();
+  const [hasMounted, setHasMounted] = useState(false);
   const contractAddress = "0x275767F80F7A2734710f46d8080eE2F9aB781Ec5";
   const paymentToken = "0x47f917EE1b0BE0D5fB51d45c0519882875fB3457";
   const [amount, setAmount] = useState(0);
@@ -134,6 +135,12 @@ const VillaCard = () => {
     }
   };
 
+  // Hydratation error fix
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+  if (!hasMounted) return null;
+
   return (
     <div className="display flex justify-center items-center gap-2 mt-20">
       <div className="card card-compact w-96  bg-gray-900 shadow-xl ">
@@ -144,8 +151,9 @@ const VillaCard = () => {
           <h2 className="card-title">
             {metaData && metaData.name}
             <div className="badge badge-primary">
-              {price.isSuccess &&
-                "$" + ethers.formatEther(price.data as string)}
+              {price.isSuccess
+                ? "$" + ethers.formatEther(price.data as string)
+                : "loading..."}
             </div>
           </h2>
           <p className="xs:text-xs sm:text-sm md:text-base ">
@@ -198,3 +206,5 @@ const VillaCard = () => {
     </div>
   );
 };
+
+export default VillaCard;

@@ -1,10 +1,11 @@
 import Navbar from "../../components/Navbar";
+import VillaCard from "../../components/VillaCard";
 
 const Marketplace = () => {
   return (
-    <div>
+    <div className="display flex justify-center items-center font-Gotham">
       <Navbar />
-      <h1>Marketplace</h1>
+      <VillaCard />
     </div>
   );
 };
