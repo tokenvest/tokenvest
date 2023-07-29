@@ -1,6 +1,7 @@
 import Navbar from "../../components/Navbar";
 import abiContract from "../../ABI/abiContract.json";
 import { useAccount, useContractRead, useBalance } from "wagmi";
+import { getSession, signOut } from "next-auth/react";
 
 const Dashboard = () => {
   const { isConnected, address } = useAccount();
@@ -35,9 +36,17 @@ const Dashboard = () => {
     <div>
       <Navbar />
       <div className="m-5 font-Gotham flex flex-col justify-center items-center">
-        <h2 className="font-bold mt-20">{isConnected && address}</h2>
+        <div className="flex items-center mt-20">
+          <span className="font-bold">{isConnected && address}</span>
+          <button
+            className="btn btn-xs btn-error m-2"
+            onClick={() => signOut()}
+          >
+            Sign out
+          </button>
+        </div>
 
-        <div className="stats border shadow bg-slate-800 text-primary-content">
+        <div className="stats border shadow bg-slate-800 text-primary-content mt-10">
           <div className="stat">
             <div className="stat-title">Your ETH balance </div>
             <div className="stat-value">
@@ -86,7 +95,7 @@ const Dashboard = () => {
         <div className="display flex justify-center items-center gap-2 mt-20">
           <div className="card card-compact w-72  bg-gray-900 shadow-xl ">
             <figure>
-              <img src="./public/marketplace4.png" alt="Villa" />
+              <img src="./marketplace4.png" alt="Villa" />
             </figure>
             <div className="card-body text-white ">
               <h2 className="card-title flex justify-center items-center">
@@ -106,7 +115,7 @@ const Dashboard = () => {
         <div className="display flex justify-center items-center gap-2 mt-20">
           <div className="card card-compact w-72  bg-gray-900 shadow-xl ">
             <figure>
-              <img src="./public/GardenVillaSquare.jpg" alt="Villa" />
+              <img src="./GardenVillaSquare.jpg" alt="Villa" />
             </figure>
             <div className="card-body text-white ">
               <h2 className="card-title flex justify-center items-center">
@@ -121,7 +130,7 @@ const Dashboard = () => {
         <div className="display flex justify-center items-center gap-2 mt-20">
           <div className="card card-compact w-72  bg-gray-900 shadow-xl ">
             <figure>
-              <img src="./public/SkyVillaSquare.jpg" alt="Villa" />
+              <img src="./SkyVillaSquare.jpg" alt="Villa" />
             </figure>
             <div className="card-body text-white ">
               <h2 className="card-title flex justify-center items-center">
@@ -136,4 +145,23 @@ const Dashboard = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+
+  // redirect if not authenticated
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { user: session.user },
+  };
+}
+
 export default Dashboard;

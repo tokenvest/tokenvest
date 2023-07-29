@@ -6,10 +6,10 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import { useState, useEffect } from "react";
-import { BigNumberish } from "ethers";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import abiPaymentToken from "../ABI/abiPaymentToken.json";
+import SignIn from "./SignIn";
 
 const Navbar = () => {
   const { isConnected, address } = useAccount();
@@ -109,7 +109,7 @@ const Navbar = () => {
         BALANCE: ${isConnected && userBalance ? (userBalance as string) : "..."}
       </p>
       <div className="navbar-end mr-10">
-        <ConnectButton />
+        <SignIn />
       </div>
     </div>
   );

@@ -28,8 +28,9 @@ function SignIn() {
         message,
         signature,
         redirect: false,
-        callbackUrl: "/user",
+        callbackUrl: "/dashboard",
       });
+      console.log("login url", urlResponse);
       const { url } = urlResponse!;
       /**
        * instead of using signIn(..., redirect: "/user")
@@ -42,12 +43,7 @@ function SignIn() {
     }
   }, [status, isConnected]);
 
-  return (
-    <div>
-      <h3>Web3 Authentication</h3>
-      <ConnectButton />
-    </div>
-  );
+  return <ConnectButton />;
 }
 
 export default SignIn;
