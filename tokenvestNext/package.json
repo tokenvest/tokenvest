@@ -10,9 +10,10 @@
   },
   "dependencies": {
     "@moralisweb3/next": "^2.22.4",
-    "@rainbow-me/rainbowkit": "^1.0.7",
+    "@rainbow-me/rainbowkit": "^1.0.8",
     "daisyui": "^3.2.2",
     "ethers": "^6.6.4",
+    "mongoose": "^7.4.2",
     "moralis": "^2.22.4",
     "next": "^13.4.3",
     "next-auth": "^4.22.3",
