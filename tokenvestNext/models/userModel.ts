@@ -11,6 +11,10 @@ const schema = new Schema({
     unique: true,
     index: true,
   },
+  walletAddress: {
+    ...requiredString,
+    unique: true,
+  },
   profileId: requiredString,
   signature: requiredString,
   name: requiredString,

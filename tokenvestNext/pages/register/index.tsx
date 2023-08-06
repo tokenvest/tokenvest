@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 
 interface FormState {
   name: string;
@@ -24,6 +25,10 @@ const initialFormState: FormState = {
 const Register: React.FC = () => {
   const router = useRouter();
   const [formState, setFormState] = useState<FormState>(initialFormState);
+  const { address } = useAccount();
+  const [walletAddress, setWalletAddress] = useState("");
+
+  console.log("the address from wagmi is: ", address);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
@@ -44,11 +49,12 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setWalletAddress(address!);
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_APP_SERVER_URL}/api/kyc/register`,
-        formState,
+        `${process.env.NEXTAUTH_URL}/api/users`,
+        { ...formState, walletAddress },
         {
           headers: {
             "content-type": "application/json",
@@ -66,11 +72,13 @@ const Register: React.FC = () => {
       <Navbar />
       <div className="min-h-screen flex flex-col justify-center sm:py-12">
         <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
-          <h1 className="font-bold text-center text-2xl mb-5">Register</h1>
+          <h1 className="font-bold text-center text-2xl mb-5 text-gray-200">
+            Register
+          </h1>
           <div className=" card card-compact w-96  bg-gray-900 shadow-xl ">
             <div className="px-5 py-7">
               <form onSubmit={handleSubmit}>
-                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                <label className="font-semibold text-sm text-gray-200 pb-1 block">
                   Name *
                 </label>
                 <input
@@ -78,11 +86,11 @@ const Register: React.FC = () => {
                   name="name"
                   value={formState.name}
                   onChange={handleInputChange}
-                  className="input input-bordered w-full max-w-xs mb-5"
+                  className="input input-bordered w-full max-w-xs mb-5 bg-gray-200 text-black"
                   required
                 />
 
-                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                <label className="font-semibold text-sm text-gray-200 pb-1 block">
                   Surname *
                 </label>
                 <input
@@ -90,11 +98,11 @@ const Register: React.FC = () => {
                   name="surname"
                   value={formState.surname}
                   onChange={handleInputChange}
-                  className="input input-bordered w-full max-w-xs mb-5"
+                  className="input input-bordered w-full max-w-xs mb-5 text-black bg-gray-200"
                   required
                 />
 
-                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                <label className="font-semibold text-sm text-gray-200 pb-1 block">
                   Address *
                 </label>
                 <input
@@ -102,29 +110,29 @@ const Register: React.FC = () => {
                   name="address"
                   value={formState.address}
                   onChange={handleInputChange}
-                  className="input input-bordered w-full max-w-xs mb-5"
+                  className="input input-bordered w-full max-w-xs mb-5 bg-gray-200 text-black"
                   required
                 />
 
-                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                <label className="font-semibold text-sm text-gray-200 pb-1 block">
                   Picture of your face *
                 </label>
                 <input
                   type="file"
                   name="facePic"
                   onChange={(e) => handleFileChange(e, "facePic")}
-                  className="file-input w-full max-w-xs "
+                  className="file-input w-full max-w-xs bg-gray-200 text-black"
                   required
                 />
 
-                <label className="font-semibold text-sm text-gray-600 pb-1 block mt-5">
+                <label className="font-semibold text-sm text-gray-200 pb-1 block mt-5">
                   Picture of your ID *
                 </label>
                 <input
                   type="file"
                   name="idPic"
                   onChange={(e) => handleFileChange(e, "idPic")}
-                  className="file-input w-full max-w-xs "
+                  className="file-input w-full max-w-xs bg-gray-200 text-black"
                   required
                 />
 

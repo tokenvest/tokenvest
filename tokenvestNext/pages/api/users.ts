@@ -11,8 +11,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(200).json(users);
       break;
     case "POST":
-      const { account, profileId, signature, name, surname, address } =
-        req.body;
+      const {
+        account,
+        profileId,
+        signature,
+        name,
+        surname,
+        address,
+        walletAddress,
+      } = req.body;
       const user = await User.create({
         account,
         profileId,
@@ -20,6 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         name,
         surname,
         address,
+        walletAddress,
       });
       res.status(201).json(user);
       break;
